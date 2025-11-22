@@ -5,6 +5,7 @@ import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 
 // Import sub-apps
+import s3Route from './routes/s3';
 import matrixRoute from './routes/matrix';
 import avatarsRoute from './routes/avatars';
 import itemsRoute from './routes/items';
@@ -23,13 +24,16 @@ app.use('/*', cors({
   allowHeaders: ['Content-Type'],
 }));
 
+console.log(`Allowed CORS origin: ${process.env.WEB_ORIGIN_URL}`);
+
 // Mount routes
 const routes = app
+  .route('/s3', s3Route)  
   .route('/matrix', matrixRoute)
   .route('/avatars', avatarsRoute)
   .route('/items', itemsRoute)
   .route('/compatibility', compatibilityRoute)
-  .route('/outfits', outfitsRoute);
+  .route('/outfits', outfitsRoute)
 
 export type AppType = typeof routes;
 

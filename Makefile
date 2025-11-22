@@ -10,14 +10,18 @@ help:   # show this list
 run:   # run the application
 	@echo "Running the application..."
 	@pnpm run dev
-
-.PHONY : db-start db-stop
-db-start:   # start the local database (using Docker)
-	@echo "Starting the local database..."
+	
+.PHONY : sb-start sb-stop sb-reset
+sb-start:   # start the local db,s3 (using Docker)
+	@echo "Starting the local supabase..."
 	@npx supabase start
-db-stop:   # stop the local database (using Docker)
-	@echo "Stopping the local database..."
+sb-stop:   # stop the local db,s3 (using Docker)
+	@echo "Stopping the local supabase..."
 	@npx supabase stop
+sb-reset:  # reset supabase-data and recreates S3 with empty bucket, and DB without any tables and seed data. 
+	@echo "Resetting the local supabase..."
+	@npx supabase db reset
+	@echo "completed. You may need to run 'make db-push' and 'make db-seed' to recreate the schema and seed data."
 
 .PHONY : db-push db-seed
 db-push:   # push the database schema to the database
@@ -26,3 +30,4 @@ db-push:   # push the database schema to the database
 db-seed:	 # delete existing rows and seed the database with initial data
 	@echo "Seeding the database..."
 	@pnpm --filter @repo/db run db:seed
+	

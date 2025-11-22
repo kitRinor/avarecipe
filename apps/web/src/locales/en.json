@@ -1,0 +1,41 @@
+{
+  "app": {
+    "__": "Text related to the entire app",
+    "title": "VRClo",
+    "description": "Visualize compatibility between avatars and outfits."
+  },
+
+  "action": {
+    "__": "Text related to buttons and actions",
+    "add": "Add",
+    "save": "Save",
+    "input_placeholder": "Please enter {{field}}",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "loading": "Loading...",
+    "error_occurred": "An error occurred"
+  },
+
+  "core": {
+    "__": "Text related to data, property names, etc.",
+    "user": {
+      "name": "User Name"
+    },
+    "avatar": {
+      "name": "Avatar Name"
+    },
+    "item": {
+      "name": "Item Name"
+    },
+    "outfit": {
+      "name": "Outfit Name"
+    }
+  },
+
+  "auth": {
+    "__": "Text related to authentication",
+    "login": "Log in",
+    "logout": "Log out",
+    "guest_login": "Guest Login"
+  }
+}

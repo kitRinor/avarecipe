@@ -1,0 +1,77 @@
+{
+  "app": {
+    "__"  : "アプリ全体に関する文言",
+    "title": "VRClo",
+    "description": "アバターと衣装の対応関係を可視化しよう",
+    "footer": "© 2025 VRClo. Built for VRChat Users."
+  },
+
+  "action": {
+    "__" : "ボタンや操作に関する文言",
+    "add": "追加",
+    "save": "保存",
+    "input_placeholder": "{{field}}を入力してください",
+    "cancel": "キャンセル",
+    "delete": "削除",
+    "loading": "読み込み中...",
+    "error_occurred": "エラーが発生しました"
+  },
+
+  
+  "core": {
+    "__": "データ,プロパティ名などに関する文言",
+    "_generic": {
+      "name": "名前",
+      "store_url": "ストアURL",
+      "thumbnail_url": "サムネイルURL"
+    },
+    "user": {
+      "name": "ユーザー名"
+    },
+    "avatar": {
+      "name": "アバター名"
+    },
+    "item": {
+      "name": "アイテム名"
+    },
+    "outfit": {
+      "name": "コーデ名"
+    }
+  },
+
+  "auth": {
+    "__": "認証に関する文言",
+    "login": "ログイン",
+    "logout": "ログアウト",
+    "guest_login": "ゲストとして利用"
+  },
+
+  "index": {
+    "__": "トップページ(LP)に関する文言",
+    "welcome_message": "VRCloへようこそ！",
+    "app_description": "VRCloは、VRChatユーザー向けのアバター衣装管理アプリです。\n「あれ、この服どの子に対応してたっけ？」を解決し、簡単に管理できます。",
+    "get_started": "さあ、始めましょう！",
+    "see_features": "機能を見る"
+  },
+
+  "home": {
+    "welcome": "ようこそ、{{name}}さん",
+    "open_store": "ストアを開く",
+    "my_avatars": "所持アバター",
+    "my_avatars_description": "所持しているアバターの一覧を管理します。",
+    "my_avatars_empty": "まだアバターが登録されていません。まずはアバターを追加しましょう！",
+    "add_avatar_dialog_title": "アバター追加",
+    "add_avatar_dialog_description": "新しいアバターを追加します。",
+    "my_items": "所持アイテム",
+    "my_items_description": "所持しているアイテムの一覧を管理します。",
+    "my_items_empty": "まだアイテムが登録されていません。まずはアイテムを追加しましょう！",
+    "add_item_dialog_title": "アイテム追加",
+    "add_item_dialog_description": "新しい衣装アイテムを追加します。",
+    "my_outfits": "マイコーデ",
+    "my_outfits_description": "自分用に作成したアバター改変やコーデの組み合わせを管理します。",
+    "community_outfit": "みんなのコーデ",
+    "community_outfit_description": "他のユーザーが公開したアバター改変やコーデの組み合わせを見れるようになります。",
+    "matrix": "対応マトリクス",
+    "matrix_description": "アバターと衣装の対応状況を表形式で確認・編集します。"
+  }
+}

@@ -7,6 +7,7 @@ export const avatars = pgTable('avatars', {
   userId: uuid('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
   name: text('name').notNull(),
   storeUrl: text('store_url'),
+  thumbnailUrl: text('thumbnail_url'),
   createdAt: timestamp('created_at').defaultNow(),
 });
 

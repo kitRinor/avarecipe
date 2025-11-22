@@ -36,6 +36,7 @@ async function main() {
       id: TEMP_USER_ID, // 固定IDを指定
       handle: '@dev',
       displayName: 'Dev User',
+      avatarUrl: 'https://github.com/shadcn.png',
       isPublic: true,
     });
 
@@ -43,9 +44,9 @@ async function main() {
     console.log('Creating Avatars...');
     // UUIDはDBが自動生成するので、returning() で生成されたIDを受け取ります
     const insertedAvatars = await db.insert(schema.avatars).values([
-      { userId: TEMP_USER_ID, name: 'シフォン (Chiffon)', storeUrl: 'https://booth.pm/ja/items/5354471' },
-      { userId: TEMP_USER_ID, name: 'ルルネ (Rurune)', storeUrl: 'https://booth.pm/ko/items/5957830' },
-      { userId: TEMP_USER_ID, name: 'マヌカ (Manuka)', storeUrl: 'https://booth.pm/ja/items/5058077' },
+      { userId: TEMP_USER_ID, name: 'シフォン (Chiffon)', storeUrl: 'https://booth.pm/ja/items/5354471', thumbnailUrl: 'https://booth.pximg.net/61a3b2d7-b4b1-4f97-9e48-ffe959b26ae9/i/5354471/c42b543c-a334-4f18-bd26-a5cf23e2a61b_base_resized.jpg' },
+      { userId: TEMP_USER_ID, name: 'ルルネ (Rurune)', storeUrl: 'https://booth.pm/ko/items/5957830', thumbnailUrl: 'https://booth.pximg.net/96d1d589-6879-4d30-8891-a2c6b8d64186/i/5957830/a4e0ae5b-7797-448b-80b1-e852c861e080_base_resized.jpg' },
+      { userId: TEMP_USER_ID, name: 'マヌカ (Manuka)', storeUrl: 'https://booth.pm/ja/items/5058077', thumbnailUrl: 'https://booth.pximg.net/8a7426aa-ba62-4ef0-9e7d-2c8ea96e7c9b/i/5058077/a18424fe-a56e-411a-9c47-27c56909593c_base_resized.jpg' },
     ]).returning();
 
     const chfn = insertedAvatars[0];

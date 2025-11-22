@@ -2,6 +2,10 @@ import { Hono } from 'hono';
 import { db, Item, items } from '@repo/db';
 import { TEMP_USER_ID } from '../const';
 import { eq } from 'drizzle-orm';
+import { zValidator } from '@hono/zod-validator';
+import { baseQueryForGetList } from '../lib/validator';
+import { generateCondition } from '../lib/queryUtils/filter';
+import { generateSorting } from '../lib/queryUtils/sort';
 
 const app = new Hono()
 
@@ -53,9 +57,18 @@ const app = new Hono()
 })
 
 // GET /items
-.get('/', async (c) => {
+.get('/', zValidator('query', baseQueryForGetList(items, {
+  sortKeys: ['id', 'createdAt'],
+  filterKeys: ['id', 'name', 'userId'],
+})), async (c) => {
   try {
-    const allItems = await db.select().from(items).orderBy(items.id);
+    // @ts-ignore
+    const { limit, offset, sort, order, filter } = c.req.valid('query');
+    const allItems = await db.select().from(items)
+      .where(generateCondition(items, filter, TEMP_USER_ID))
+      .orderBy(generateSorting(items, order, sort))
+      .limit(limit)
+      .offset(offset);
     return c.json<Item[]>(allItems);
   } catch (e) {
     console.error(e);

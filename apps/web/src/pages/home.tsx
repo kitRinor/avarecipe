@@ -1,0 +1,221 @@
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { api } from "@/lib/api";
+import { useAuth } from "@/contexts/AuthContext";
+
+// UI Components
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Plus, Grid3X3, User as UserIcon } from "lucide-react";
+import { PageLayout } from "@/components/pageLayout";
+import { useTranslation } from "react-i18next";
+import type { Avatar, Item } from "@/lib/api";
+
+export default function HomePage() {
+  const { t } = useTranslation();
+  const auth = useAuth();
+  
+  const [avatars, setAvatars] = useState<Avatar[]>([]);
+  const [items, setItems] = useState<Item[]>([]);
+  const [openNewAvatar, setOpenNewAvatar] = useState(false);
+  const [openNewItem, setOpenNewItem] = useState(false);
+
+  // アバター一覧取得
+  const fetchAvatars = async () => {
+    const res = await api.avatars.$get();
+    console.log(res)
+    if (res.ok) setAvatars(await res.json());
+  };
+  // アイテム一覧取得
+  const fetchItems = async () => {
+    const res = await api.items.$get();
+    console.log(res)
+    if (res.ok) setItems(await res.json());
+  };
+
+
+  useEffect(() => {
+    if (auth.user) {
+      fetchAvatars();
+      fetchItems();
+    }
+  }, [auth.user]);
+
+  // アバター追加処理
+  const handleAddAvatar = async (data: Partial<Avatar>) => {
+    await api.avatars.$post({ body: data });
+    setOpenNewAvatar(false);
+    fetchAvatars(); // リスト更新
+  };
+  // アイテム追加処理
+  const handleAddItem = async (data: Partial<Item>) => {
+    await api.items.$post({ body: data });
+    setOpenNewItem(false);
+    fetchItems(); // リスト更新
+  };
+
+
+  return (
+    <PageLayout>
+      <div className="gap-8 flex flex-col">
+        {/* --- クイックアクセス --- */}
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Link to="/matrix">
+            <Card className="hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors cursor-pointer h-full border-2 border-transparent hover:border-zinc-200 dark:hover:border-zinc-800">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-lg font-bold">{t("home.matrix")}</CardTitle>
+                <Grid3X3 className="h-5 w-5 text-zinc-500" />
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-zinc-500">
+                  {t("home.matrix_description")}
+                </p>
+              </CardContent>
+            </Card>
+          </Link>
+
+          <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 border-blue-100 dark:border-blue-900">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-lg font-bold text-blue-700 dark:text-blue-300">{t("home.community_outfit")}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-blue-600/80 dark:text-blue-400/80">
+                {t("home.community_outfit_description")}
+              </p>
+            </CardContent>
+          </Card>
+        </section>
+
+        {/* --- 所持アバター --- */}
+        <section>
+          <MyAssetList<Avatar>
+            t_mode="avatar"
+            data={avatars}
+            isDialogOpen={openNewAvatar}
+            setIsDialogOpen={setOpenNewAvatar}
+            handleAdd={handleAddAvatar}
+          />
+        </section>
+        {/* --- 所持アイテム --- */}
+        <section>
+          <MyAssetList<Item>
+            t_mode="item"
+            data={items}
+            isDialogOpen={openNewItem}
+            setIsDialogOpen={setOpenNewItem}
+            handleAdd={handleAddItem}
+          />
+        </section>
+      </div>
+    </PageLayout>
+  );
+}
+
+const MyAssetList = <T extends Avatar | Item>(props:{
+  t_mode?: 'avatar' | 'item'; 
+  data: T[];
+  isDialogOpen: boolean;
+  setIsDialogOpen: (open: boolean) => void;
+  handleAdd: (data: Partial<T>) => void;
+}) => {
+
+  const { t } = useTranslation();
+  const [newData, setNewData] = useState<Partial<T>>({});
+
+  const trans = {
+    title: props.t_mode === 'item' ? t("home.my_items") : t("home.my_avatars"),
+    addDialogTitle: props.t_mode === 'item' ? t("home.add_item_dialog_title") : t("home.add_avatar_dialog_title"),
+    addDialogDescription: props.t_mode === 'item' ? t("home.add_item_dialog_description") : t("home.add_avatar_dialog_description"),
+    emptyMessage: props.t_mode === 'item' ? t("home.my_items_empty") : t("home.my_avatars_empty"),
+  }
+
+  return (
+    <Card className="hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors cursor-pointer h-full border-2 border-transparent hover:border-zinc-200 dark:hover:border-zinc-800">
+      <CardHeader className="pb-2 flex flex-row justify-between">
+        <CardTitle className="text-lg font-bold flex items-center gap-2">
+          <UserIcon className="h-5 w-5" /> 
+          {trans.title}
+        </CardTitle>
+
+        {/* アバター追加ダイアログ */}
+        <Dialog open={props.isDialogOpen} onOpenChange={props.setIsDialogOpen}>
+          <DialogTrigger asChild>
+            <Button size="sm"><Plus className="h-4 w-4 mr-1" /> {t("action.add")}</Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>{trans.addDialogTitle}</DialogTitle>
+              <DialogDescription>
+                {trans.addDialogDescription}
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label htmlFor="name">{t(`core._generic.name`)}</Label>
+                <Input 
+                  id="name" 
+                  placeholder={t("action.input_placeholder", { field: t(`core._generic.name`) })} 
+                  value={newData.name}
+                  onChange={(e) => setNewData({ ...newData, name: e.target.value })}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="store_url">{t(`core._generic.store_url`)}</Label>
+                <Input 
+                  id="store_url" 
+                  placeholder={t("action.input_placeholder", { field: t(`core._generic.store_url`) })} 
+                  value={newData.storeUrl ?? undefined}
+                  onChange={(e) => setNewData({ ...newData, storeUrl: e.target.value })}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="thumbnail_url">{t(`core._generic.thumbnail_url`)}</Label>
+                <Input 
+                  id="thumbnail_url" 
+                  placeholder={t("action.input_placeholder", { field: t(`core._generic.thumbnail_url`) })} 
+                  value={newData.thumbnailUrl ?? undefined}
+                  onChange={(e) => setNewData({ ...newData, thumbnailUrl: e.target.value })}
+                />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button onClick={() => props.handleAdd(newData)}>{t("action.add")}</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </CardHeader>             
+
+      {/* アバターリスト */}
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 p-4">
+        {props.data.map((item) => (
+          <Card key={item.id} className="overflow-hidden">
+            <div className="aspect-square bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-zinc-300">
+              {item.thumbnailUrl ? (
+                <img src={item.thumbnailUrl} alt={item.name} className="object-cover w-full h-full" />
+              ) : (
+                <UserIcon className="h-12 w-12" />
+              )}
+            </div>
+            <CardFooter className="p-3 flex flex-col items-start">
+              <span className="font-bold truncate w-full">{item.name}</span>
+              {item.storeUrl && (
+                <a href={item.storeUrl} target="_blank" rel="noreferrer" className="text-xs text-blue-500 hover:underline">
+                  {t("home.open_store")}
+                </a>
+              )}
+            </CardFooter>
+          </Card>
+        ))}
+        
+        {props.data.length === 0 && (
+          <div className="col-span-full text-center py-10 text-zinc-500 bg-zinc-50 rounded-lg border border-dashed">
+            {trans.emptyMessage}
+          </div>
+        )}
+      </div>
+    </Card>
+  );
+}

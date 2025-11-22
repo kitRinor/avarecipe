@@ -1,13 +1,29 @@
-import { StrictMode } from 'react'
+import { StrictMode, Suspense } from 'react'
 import { createRoot } from 'react-dom/client'
-import { BrowserRouter } from 'react-router-dom'
+import { BrowserRouter, useRoutes } from 'react-router-dom'
 import './index.css'
-import App from './App.tsx'
+import './lib/i18n'
+import routes from '~react-pages'
+import { AuthProvider } from './contexts/AuthContext'
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </StrictMode>,
-)
+function AppRoutes() {
+  return (
+      <Suspense fallback={<p>Loading...</p>}>
+        {useRoutes(routes)}
+      </Suspense>
+  )
+}
+
+function App() {
+  return (
+    <StrictMode>
+      <AuthProvider>
+        <BrowserRouter>
+          <AppRoutes />
+        </BrowserRouter>
+      </AuthProvider>
+    </StrictMode>
+  )
+}
+
+createRoot(document.getElementById('root')!).render(<App />)

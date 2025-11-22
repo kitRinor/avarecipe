@@ -1,7 +1,12 @@
 import { Hono } from 'hono';
 import { db, avatars, Avatar } from '@repo/db';
 import { TEMP_USER_ID } from '../const';
-import { eq } from 'drizzle-orm';
+import { and, asc, eq } from 'drizzle-orm';
+import { zValidator } from '@hono/zod-validator';
+import { baseQueryForGetList } from '../lib/validator';
+import { createFilterSchema, generateCondition } from '../lib/queryUtils/filter';
+import z from 'zod';
+import { generateSorting } from '../lib/queryUtils/sort';
 
 
 // must write as chain method to make collect type-completion at hono-rpc
@@ -10,26 +15,36 @@ const app = new Hono()
 
 // POST /avatars
 .post('/', async (c) => {
-  try {
-    const body = await c.req.json();
-    if (!body.name) return c.json({ error: 'Name is required' }, 400);
+    try {
+      const body = await c.req.json();
+      if (!body.name) return c.json({ error: 'Name is required' }, 400);
 
-    const result = await db.insert(avatars).values({
-      name: body.name,
-      userId: TEMP_USER_ID,
-    }).returning();
+      const result = await db.insert(avatars).values({
+        name: body.name,
+        userId: TEMP_USER_ID,
+      }).returning();
 
-    return c.json<Avatar>(result[0]);
-  } catch (e) {
-    console.error(e);
-    return c.json({ error: 'Failed to create avatar' }, 500);
+      return c.json<Avatar>(result[0]);
+    } catch (e) {
+      console.error(e);
+      return c.json({ error: 'Failed to create avatar' }, 500);
+    }
   }
-})
+)
 
 // GET /avatars
-.get('/', async (c) => {
+.get('/', zValidator('query', baseQueryForGetList(avatars, {
+    sortKeys: ['id', 'createdAt'],
+    filterKeys: ['id', 'name', 'userId'],
+  })), async (c) => {
   try {
-    const allAvatars = await db.select().from(avatars).orderBy(avatars.id);
+    // @ts-ignore
+    const { limit, offset, sort, order, filter } = c.req.valid('query');
+    const allAvatars = await db.select().from(avatars)
+      .where(generateCondition(avatars, filter, TEMP_USER_ID))
+      .orderBy(generateSorting(avatars, order, sort))
+      .limit(limit)
+      .offset(offset);
     return c.json<Avatar[]>(allAvatars);
   } catch (e) {
     console.error(e);
