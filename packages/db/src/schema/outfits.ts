@@ -11,7 +11,6 @@ export const outfits = pgTable('outfits', {
   userId: uuid('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
   
   avatarId: uuid('avatar_id').references(() => avatars.id, { onDelete: 'cascade' }).notNull(),
-
   name: text('name').notNull(), // コーデ名
   description: text('description'), // メモ
   imageUrl: text('image_url'), // 完成形のスクショとか

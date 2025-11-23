@@ -41,9 +41,14 @@
 
   "auth": {
     "__": "認証に関する文言",
+    "email": "メールアドレス",
+    "password": "パスワード",
     "login": "ログイン",
     "logout": "ログアウト",
-    "guest_login": "ゲストとして利用"
+    "sign_up": "新規登録",
+    "guest_login": "ゲストとして利用",
+    "if_forget_password": "パスワードを忘れた",
+    "if_new_user": "アカウントを作成"
   },
 
   "index": {
@@ -73,5 +78,11 @@
     "community_outfit_description": "他のユーザーが公開したアバター改変やコーデの組み合わせを見れるようになります。",
     "matrix": "対応マトリクス",
     "matrix_description": "アバターと衣装の対応状況を表形式で確認・編集します。"
+  },
+
+  "not_found": {
+    "page_not_found": "ページが見つかりません",
+    "page_not_found_description": "お探しのページは存在しないか、移動した可能性があります。",
+    "go_home": "ホームへ戻る"
   }
 }

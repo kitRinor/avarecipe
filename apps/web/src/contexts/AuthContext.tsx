@@ -1,16 +1,13 @@
+import { api } from "@/lib/api";
+import { InferResponseType } from "hono/client";
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 
-export type AuthUser = {
-  id: string;
-  handle: string;
-  displayName: string;
-  avatarUrl?: string;
-};
+export type AuthUser = InferResponseType<typeof api.auth.me.$get, 200>;
 
 // 開発用ダミーユーザー (Seedで作ったデータとIDを合わせる)
 const DUMMY_USER: AuthUser = {
   id: "00000000-0000-0000-0000-000000000000",
-  handle: "@dev",
+  handle: "dev",
   displayName: "Dev User",
   avatarUrl: "https://github.com/shadcn.png", // 適当なアイコン
 };
@@ -18,7 +15,7 @@ const DUMMY_USER: AuthUser = {
 type ContextType = {
   user: AuthUser | null;
   isLoading: boolean;
-  login: () => Promise<void>;
+  login: (email: string, password: string) => Promise<{ok: boolean, error?: string}>;
   logout: () => Promise<void>;
 };
 
@@ -29,30 +26,62 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    // auto login for dev
-    const storedUser = localStorage.getItem("vrclo_mock_user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
+    const checkSession = async () => {
+      setIsLoading(true);
+      try {
+        const res = await api.auth.me.$get(); // 認証チェック & ユーザー情報取得
+        console.log(res);
+        if (res.ok) {
+          const user = await res.json();
+          setUser(user);
+        } else {
+          setUser(null);
+        }
+      } catch (e) {
+        console.error("Session check failed:", e);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    checkSession();
   }, []);
 
-  const login = async () => {
-    // dummy wait
+  const login = async (email: string, password: string) => {
     setIsLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    // set dummy user
-    setUser(DUMMY_USER);
-    localStorage.setItem("vrclo_mock_user", JSON.stringify(DUMMY_USER));
-    setIsLoading(false);
+    try {
+      const res = await api.auth.login.$post({ json: { email, password } });
+      if (res.ok) {
+        const user = await res.json();
+        setUser(user);
+      } else {
+        const { error } = await res.json();
+        throw new Error(error || "unknown error");
+      }
+      setIsLoading(false);
+      return {ok: true};
+    } catch (e) {
+      console.error("Login failed:", e);
+      setUser(null);
+      setIsLoading(false);
+      return {ok: false, error: (e as Error).message};
+    } 
   };
 
   const logout = async () => {
-    // dummy wait
     setIsLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 300));
-    setUser(null);
-    localStorage.removeItem("vrclo_mock_user");
-    setIsLoading(false);
+    try {
+      const res = await api.auth.logout.$post();
+      if (res.ok) {
+        setUser(null);
+      } else {
+        const err = await res.text();
+        throw new Error(err || "unknown error");
+      }
+    } catch (e) {
+      console.error("Logout failed:", e);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

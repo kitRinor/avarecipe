@@ -6,6 +6,7 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { v4 as uuidv4 } from 'uuid';
 import { s3Client, S3_BUCKET_NAME, S3_PUBLIC_URL, resolveS3Url } from '../lib/s3'; // 👈 S3クライアントをインポート
 import { TEMP_USER_ID } from '../const';
+import { requireAuth } from '../middleware/auth';
 
 /**
  * /s3 Routes
@@ -23,6 +24,8 @@ const PresignedUrlSchema = z.object({
 });
 
 const app = new Hono()
+.use('/*', requireAuth) // 全ルートで認証必須
+
 // POST /s3/presigned
 .post(
   '/presigned',

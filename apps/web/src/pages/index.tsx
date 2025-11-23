@@ -7,17 +7,17 @@ import { useTranslation } from "react-i18next";
 
 export default function LandingPage() {
   const { t } = useTranslation();
-  const { user, isLoading } = useAuth();
+  const auth = useAuth();
   const navigate = useNavigate();
 
-  // 🔄 ログイン済みなら自動でホームへ
+  // redirect if logged in
   useEffect(() => {
-    if (!isLoading && user) {
+    if (!auth.isLoading && auth.user) {
       navigate("/home");
     }
-  }, [user, isLoading, navigate]);
+  }, [auth.user, auth.isLoading, navigate]);
 
-  if (isLoading) return null; // 判定中は何も出さない
+  if (auth.isLoading) return null; 
 
   return (
     <div className="min-h-screen flex flex-col bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-50">

@@ -17,25 +17,12 @@ import type { Avatar, Item } from "@/lib/api";
 export default function HomePage() {
   const { t } = useTranslation();
   const auth = useAuth();
+  const navigate = useNavigate();
   
   const [avatars, setAvatars] = useState<Avatar[]>([]);
   const [items, setItems] = useState<Item[]>([]);
   const [openNewAvatar, setOpenNewAvatar] = useState(false);
   const [openNewItem, setOpenNewItem] = useState(false);
-
-  // アバター一覧取得
-  const fetchAvatars = async () => {
-    const res = await api.avatars.$get();
-    console.log(res)
-    if (res.ok) setAvatars(await res.json());
-  };
-  // アイテム一覧取得
-  const fetchItems = async () => {
-    const res = await api.items.$get();
-    console.log(res)
-    if (res.ok) setItems(await res.json());
-  };
-
 
   useEffect(() => {
     if (auth.user) {
@@ -44,19 +31,39 @@ export default function HomePage() {
     }
   }, [auth.user]);
 
-  // アバター追加処理
+  // 一覧取得
+  const fetchAvatars = async () => {
+    const res = await api.avatars.$get();
+    console.log(res)
+    if (res.ok) setAvatars(await res.json());
+  };
+  const fetchItems = async () => {
+    const res = await api.items.$get();
+    console.log(res)
+    if (res.ok) setItems(await res.json());
+  };
+
+  // 追加処理
   const handleAddAvatar = async (data: Partial<Avatar>) => {
     await api.avatars.$post({ body: data });
     setOpenNewAvatar(false);
-    fetchAvatars(); // リスト更新
+    fetchAvatars(); 
   };
-  // アイテム追加処理
   const handleAddItem = async (data: Partial<Item>) => {
     await api.items.$post({ body: data });
     setOpenNewItem(false);
-    fetchItems(); // リスト更新
+    fetchItems(); 
   };
 
+  // 詳細に移動
+  const handleClickAvatar = (avatar: Avatar) => {
+    navigate(`/avatars/${avatar.id}`);
+    console.log("Clicked avatar:", avatar);
+  };
+  const handleClickItem = (item: Item) => {
+    navigate(`/items/${item.id}`);
+    console.log("Clicked item:", item);
+  };
 
   return (
     <PageLayout>
@@ -96,6 +103,7 @@ export default function HomePage() {
             data={avatars}
             isDialogOpen={openNewAvatar}
             setIsDialogOpen={setOpenNewAvatar}
+            handleClick={handleClickAvatar}
             handleAdd={handleAddAvatar}
           />
         </section>
@@ -106,6 +114,7 @@ export default function HomePage() {
             data={items}
             isDialogOpen={openNewItem}
             setIsDialogOpen={setOpenNewItem}
+            handleClick={handleClickItem}
             handleAdd={handleAddItem}
           />
         </section>
@@ -119,7 +128,8 @@ const MyAssetList = <T extends Avatar | Item>(props:{
   data: T[];
   isDialogOpen: boolean;
   setIsDialogOpen: (open: boolean) => void;
-  handleAdd: (data: Partial<T>) => void;
+  handleClick: (item: T) => void;
+  handleAdd: (item: Partial<T>) => void;
 }) => {
 
   const { t } = useTranslation();
@@ -133,7 +143,7 @@ const MyAssetList = <T extends Avatar | Item>(props:{
   }
 
   return (
-    <Card className="hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors cursor-pointer h-full border-2 border-transparent hover:border-zinc-200 dark:hover:border-zinc-800">
+    <Card className="hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors h-full border-2 border-transparent hover:border-zinc-200 dark:hover:border-zinc-800">
       <CardHeader className="pb-2 flex flex-row justify-between">
         <CardTitle className="text-lg font-bold flex items-center gap-2">
           <UserIcon className="h-5 w-5" /> 
@@ -191,7 +201,7 @@ const MyAssetList = <T extends Avatar | Item>(props:{
       {/* アバターリスト */}
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 p-4">
         {props.data.map((item) => (
-          <Card key={item.id} className="overflow-hidden">
+          <Card key={item.id} onClick={() => props.handleClick(item)} className="hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors h-full border-2 border-transparent hover:border-zinc-200 dark:hover:border-zinc-800 overflow-hidden transition-colors cursor-pointer">
             <div className="aspect-square bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-zinc-300">
               {item.thumbnailUrl ? (
                 <img src={item.thumbnailUrl} alt={item.name} className="object-cover w-full h-full" />

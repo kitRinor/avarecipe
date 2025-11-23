@@ -34,8 +34,10 @@ async function main() {
     console.log('Creating Users...');
     await db.insert(schema.users).values({
       id: TEMP_USER_ID, // 固定IDを指定
-      handle: '@dev',
-      displayName: 'Dev User',
+      handle: 'vrclo', // @vrclo
+      email: 'email@example.com',
+      password: '$2b$10$rD3ceRnqEGJ/JN4oT.aED.maXdQLoCuhg2K75BzOzNLXipNJmqX/u', // hash for "password"
+      displayName: 'VRClo User',
       avatarUrl: 'https://github.com/shadcn.png',
       isPublic: true,
     });

@@ -3,8 +3,10 @@ import { config } from 'dotenv';
 import { Hono } from 'hono';
 // import { OpenAPIHono } from '@hono/zod-openapi';
 import { cors } from 'hono/cors';
+import { authMiddleware } from './middleware/auth';
 
 // Import sub-apps
+import authRoute from './routes/auth';
 import s3Route from './routes/s3';
 import matrixRoute from './routes/matrix';
 import avatarsRoute from './routes/avatars';
@@ -22,12 +24,16 @@ app.use('/*', cors({
   origin: process.env.WEB_ORIGIN_URL || 'http://localhost:5173',
   allowMethods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowHeaders: ['Content-Type'],
+  credentials: true, // Cookieを許可
 }));
 
-console.log(`Allowed CORS origin: ${process.env.WEB_ORIGIN_URL}`);
+// Apply auth middleware globally
+app.use('/*', authMiddleware);
+
 
 // Mount routes
 const routes = app
+  .route('/auth', authRoute)
   .route('/s3', s3Route)  
   .route('/matrix', matrixRoute)
   .route('/avatars', avatarsRoute)
