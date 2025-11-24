@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import { db, Item, items } from '@repo/db';
+import { db, Item, items } from '../db';
 import { TEMP_USER_ID } from '../const';
 import { eq } from 'drizzle-orm';
 import { zValidator } from '@hono/zod-validator';
@@ -62,7 +62,6 @@ const app = new Hono()
   filterKeys: ['id', 'name', 'userId'],
 })), async (c) => {
   try {
-    // @ts-ignore
     const { limit, offset, sort, order, filter } = c.req.valid('query');
     const allItems = await db.select().from(items)
       .where(generateCondition(items, filter, TEMP_USER_ID))

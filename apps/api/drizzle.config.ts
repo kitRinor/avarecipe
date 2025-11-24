@@ -2,7 +2,7 @@ import type { Config } from 'drizzle-kit';
 import * as dotenv from 'dotenv';
 
 // モノレポのルートにある .env を読み込む
-dotenv.config({ path: '../../.env' });
+dotenv.config();
 
 export default {
   schema: './src/schema',

@@ -1,11 +1,10 @@
 import { PgTable } from 'drizzle-orm/pg-core';
 import { z } from 'zod';
-import { createFilterSchema } from './queryUtils/filter';
-import { createSortSchema } from './queryUtils/sort';
+import { createCheckRegex } from './queryUtils/filter';
 
 
 
-const commonKeys = ['id', 'createdAt', 'updatedAt'] as const;
+const commonKeys = ['createdAt','updatedAt', 'id' ] as const;
 
 /**
  * 📄 Base GetListQuery Schema
@@ -22,32 +21,36 @@ const commonKeys = ['id', 'createdAt', 'updatedAt'] as const;
 export function baseQueryForGetList <T extends PgTable>(
   table:T, 
   option: {
-    sortKeys?: (keyof T['_']['columns'])[],
-    sortDefaultKey?: keyof T['_']['columns'],
+    sortKeys?: [keyof T['_']['columns'], ...(keyof T['_']['columns'])[]],
     filterKeys?: (keyof T['_']['columns'])[]
   } = {}
 ) {
   const { 
-    sortKeys = [...commonKeys] as (keyof T['_']['columns'])[],
-    sortDefaultKey = 'createdAt' as keyof T['_']['columns'],
-    filterKeys = [...commonKeys] as (keyof T['_']['columns'])[]
+    sortKeys = [...commonKeys] ,
+    filterKeys = [...commonKeys]
   } = option;
+  
   return z.object({
     // Pagination: limit (default 20, max 100)
-    // z.coerce.number() converts string "20" to number 20 automatically.
     limit: z.coerce.number().min(1).max(100).default(20),
-
     // Pagination: offset (default 0)
     offset: z.coerce.number().min(0).default(0),
-
     // Sort Order: asc or desc (default desc)
     order: z.enum(['asc', 'desc']).default('desc'),
 
-    // Sort Column: defaults to common keys (id, createdAt, updatedAt)
+    sort: z.enum(sortKeys as [string, ...string[]]).default(sortKeys[0] as string),
+
+    filter: z.union([
+        z.string().regex(createCheckRegex(filterKeys as string[])),
+        z.array(z.string().regex(createCheckRegex(filterKeys as string[])))   
+      ])
+      .transform((v) => (Array.isArray(v) ? v : [v]))
+      .optional()
+      .default([]),
+
     // Can be overwritten or extended in specific routes using .extend()
-    sort: createSortSchema(table, sortKeys, sortDefaultKey),
-    filter: createFilterSchema(table, filterKeys)
+    // sort: createSortSchema(table, sortKeys, sortDefaultKey),
+    // filter: createFilterSchema(table, filterKeys)
   })
-  .optional();
 }
 

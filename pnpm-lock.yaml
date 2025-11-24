@@ -44,18 +44,21 @@ importers:
       bcrypt:
         specifier: ^6.0.0
         version: 6.0.0
-      dotenv:
-        specifier: ^16.4.5
-        version: 16.6.1
       drizzle-orm:
         specifier: ^0.30.0
         version: 0.30.10(@types/react@19.2.6)(postgres@3.4.7)(react@19.2.0)
+      drizzle-zod:
+        specifier: ^0.8.3
+        version: 0.8.3(drizzle-orm@0.30.10(@types/react@19.2.6)(postgres@3.4.7)(react@19.2.0))(zod@4.1.12)
       hono:
         specifier: ^4.10.6
         version: 4.10.6
       jose:
         specifier: ^6.1.2
         version: 6.1.2
+      postgres:
+        specifier: ^3.4.3
+        version: 3.4.7
       uuid:
         specifier: ^13.0.0
         version: 13.0.0
@@ -72,6 +75,12 @@ importers:
       '@types/uuid':
         specifier: ^11.0.0
         version: 11.0.0
+      dotenv:
+        specifier: ^16.4.5
+        version: 16.6.1
+      drizzle-kit:
+        specifier: ^0.20.14
+        version: 0.20.18
       tsx:
         specifier: ^4.7.1
         version: 4.20.6
@@ -202,6 +211,9 @@ importers:
       drizzle-orm:
         specifier: ^0.30.0
         version: 0.30.10(@types/react@19.2.6)(postgres@3.4.7)(react@19.2.0)
+      drizzle-zod:
+        specifier: ^0.8.3
+        version: 0.8.3(drizzle-orm@0.30.10(@types/react@19.2.6)(postgres@3.4.7)(react@19.2.0))(zod@3.25.76)
       postgres:
         specifier: ^3.4.3
         version: 3.4.7
@@ -1994,6 +2006,12 @@ packages:
         optional: true
       sqlite3:
         optional: true
+
+  drizzle-zod@0.8.3:
+    resolution: {integrity: sha512-66yVOuvGhKJnTdiqj1/Xaaz9/qzOdRJADpDa68enqS6g3t0kpNkwNYjUuaeXgZfO/UWuIM9HIhSlJ6C5ZraMww==}
+    peerDependencies:
+      drizzle-orm: '>=0.36.0'
+      zod: ^3.25.0 || ^4.0.0
 
   dunder-proto@1.0.1:
     resolution: {integrity: sha512-KIN/nDJBQRcXw0MLVhZE9iQHmG68qAVIBg9CqmUYjmQIhgij9U5MFvrqkUL5FbtyyzZuOeOt0zdeRe4UY7ct+A==}
@@ -5587,6 +5605,16 @@ snapshots:
       '@types/react': 19.2.6
       postgres: 3.4.7
       react: 19.2.0
+
+  drizzle-zod@0.8.3(drizzle-orm@0.30.10(@types/react@19.2.6)(postgres@3.4.7)(react@19.2.0))(zod@3.25.76):
+    dependencies:
+      drizzle-orm: 0.30.10(@types/react@19.2.6)(postgres@3.4.7)(react@19.2.0)
+      zod: 3.25.76
+
+  drizzle-zod@0.8.3(drizzle-orm@0.30.10(@types/react@19.2.6)(postgres@3.4.7)(react@19.2.0))(zod@4.1.12):
+    dependencies:
+      drizzle-orm: 0.30.10(@types/react@19.2.6)(postgres@3.4.7)(react@19.2.0)
+      zod: 4.1.12
 
   dunder-proto@1.0.1:
     dependencies:

@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import { db, outfits, outfitItems, Outfit, OutfitItem } from '@repo/db';
+import { db, outfits, outfitItems, Outfit, OutfitItem } from '../db';
 import { TEMP_USER_ID } from '../const';
 import { eq } from 'drizzle-orm';
 

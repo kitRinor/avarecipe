@@ -33,24 +33,34 @@ export default function HomePage() {
 
   // 一覧取得
   const fetchAvatars = async () => {
-    const res = await api.avatars.$get();
-    console.log(res)
+    const res = await api.avatars.$get({
+      query: { 
+        limit: '20',
+        order: 'desc',
+        sort: 'createdAt',
+      }
+    });
     if (res.ok) setAvatars(await res.json());
   };
   const fetchItems = async () => {
-    const res = await api.items.$get();
-    console.log(res)
+    const res = await api.items.$get({
+      query:{
+        limit: '20',
+        order: 'desc',
+        sort: 'createdAt',
+      }
+    });
     if (res.ok) setItems(await res.json());
   };
 
   // 追加処理
   const handleAddAvatar = async (data: Partial<Avatar>) => {
-    await api.avatars.$post({ body: data });
+    await api.avatars.$post({ json: data });
     setOpenNewAvatar(false);
     fetchAvatars(); 
   };
   const handleAddItem = async (data: Partial<Item>) => {
-    await api.items.$post({ body: data });
+    await api.items.$post({ json: data });
     setOpenNewItem(false);
     fetchItems(); 
   };
@@ -58,11 +68,9 @@ export default function HomePage() {
   // 詳細に移動
   const handleClickAvatar = (avatar: Avatar) => {
     navigate(`/avatars/${avatar.id}`);
-    console.log("Clicked avatar:", avatar);
   };
   const handleClickItem = (item: Item) => {
     navigate(`/items/${item.id}`);
-    console.log("Clicked item:", item);
   };
 
   return (
@@ -150,7 +158,6 @@ const MyAssetList = <T extends Avatar | Item>(props:{
           {trans.title}
         </CardTitle>
 
-        {/* アバター追加ダイアログ */}
         <Dialog open={props.isDialogOpen} onOpenChange={props.setIsDialogOpen}>
           <DialogTrigger asChild>
             <Button size="sm"><Plus className="h-4 w-4 mr-1" /> {t("action.add")}</Button>
@@ -196,17 +203,24 @@ const MyAssetList = <T extends Avatar | Item>(props:{
             </DialogFooter>
           </DialogContent>
         </Dialog>
+
       </CardHeader>             
 
-      {/* アバターリスト */}
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 p-4">
+      {/* 横スクロール可能に */}
+      <div className="flex gap-4 p-4 overflow-x-auto">
         {props.data.map((item) => (
-          <Card key={item.id} onClick={() => props.handleClick(item)} className="hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors h-full border-2 border-transparent hover:border-zinc-200 dark:hover:border-zinc-800 overflow-hidden transition-colors cursor-pointer">
+          <Card 
+            key={item.id} onClick={() => props.handleClick(item)} 
+            className="min-w-[33%] w-[33%] md:min-w-[25%] md:w-[25%] lg:min-w-[20%] lg:w-[20%] hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors h-full border-2 border-transparent hover:border-zinc-200 dark:hover:border-zinc-800 overflow-hidden transition-colors cursor-pointer"
+            // className="w-1/5 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors h-full border-2 border-transparent hover:border-zinc-200 dark:hover:border-zinc-800 overflow-hidden transition-colors cursor-pointer"
+          >
             <div className="aspect-square bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-zinc-300">
               {item.thumbnailUrl ? (
                 <img src={item.thumbnailUrl} alt={item.name} className="object-cover w-full h-full" />
               ) : (
-                <UserIcon className="h-12 w-12" />
+                <div className="w-full h-full flex items-center justify-center">
+                  <UserIcon className="h-12 w-12" />
+                </div>
               )}
             </div>
             <CardFooter className="p-3 flex flex-col items-start">

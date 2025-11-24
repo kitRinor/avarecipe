@@ -1,4 +1,4 @@
-import { pgTable, serial, text, timestamp, uuid } from 'drizzle-orm/pg-core';
+import { pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { users } from './users'; 
 
 // アバター情報を管理するテーブル

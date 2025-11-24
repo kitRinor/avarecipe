@@ -5,7 +5,6 @@ import postgres from 'postgres';
 import { config } from 'dotenv';
 config();
 
-// フォルダを指定すると、自動的にさっき作った schema/index.ts が読み込まれます
 import * as schema from './schema';
 
 const connectionString = process.env.DATABASE_URL;

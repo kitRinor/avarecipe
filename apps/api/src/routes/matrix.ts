@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import { db, avatars, items, compatibility, Avatar, Item, Compatibility } from '@repo/db';
+import { db, avatars, items, compatibility, Avatar, Item, Compatibility } from '../db';
 import { eq } from 'drizzle-orm';
 import { TEMP_USER_ID } from '../const';
 

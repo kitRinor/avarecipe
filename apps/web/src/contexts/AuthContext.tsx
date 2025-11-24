@@ -4,13 +4,12 @@ import { createContext, useContext, useState, useEffect, ReactNode } from "react
 
 export type AuthUser = InferResponseType<typeof api.auth.me.$get, 200>;
 
-// 開発用ダミーユーザー (Seedで作ったデータとIDを合わせる)
-const DUMMY_USER: AuthUser = {
-  id: "00000000-0000-0000-0000-000000000000",
-  handle: "dev",
-  displayName: "Dev User",
-  avatarUrl: "https://github.com/shadcn.png", // 適当なアイコン
-};
+// const DUMMY_USER: AuthUser = {
+//   id: "00000000-0000-0000-0000-000000000000",
+//   handle: "dev",
+//   displayName: "Dev User",
+//   avatarUrl: "https://github.com/shadcn.png",
+// };
 
 type ContextType = {
   user: AuthUser | null;
@@ -30,7 +29,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setIsLoading(true);
       try {
         const res = await api.auth.me.$get(); // 認証チェック & ユーザー情報取得
-        console.log(res);
         if (res.ok) {
           const user = await res.json();
           setUser(user);

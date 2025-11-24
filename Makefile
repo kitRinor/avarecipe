@@ -26,8 +26,8 @@ sb-reset:  # reset supabase-data and recreates S3 with empty bucket, and DB with
 .PHONY : db-push db-seed
 db-push:   # push the database schema to the database
 	@echo "Pushing the database schema..."
-	@pnpm --filter @repo/db run db:push
+	@pnpm --filter @repo/api run db:push
 db-seed:	 # delete existing rows and seed the database with initial data
 	@echo "Seeding the database..."
-	@pnpm --filter @repo/db run db:seed
+	@pnpm --filter @repo/api run db:seed
 	

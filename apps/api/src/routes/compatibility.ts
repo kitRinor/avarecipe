@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import { db, compatibility } from '@repo/db';
+import { db, compatibility } from '../db';
 import { eq, and } from 'drizzle-orm';
 import { TEMP_USER_ID } from '../const';
 

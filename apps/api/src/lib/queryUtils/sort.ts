@@ -17,9 +17,9 @@ export function createSortSchema<T extends PgTable>(
 export function generateSorting<T extends PgTable>(
   table: T,
   order: 'asc' | 'desc',
-  sort: keyof T['_']['columns'],
+  sort: string,
 ): SQL {
-  const column = getTableColumns(table)[sort as string];
+  const column = getTableColumns(table)[sort];
   if (order === 'asc') {
     return asc(column);
   } else {

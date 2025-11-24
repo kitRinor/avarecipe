@@ -1,12 +1,12 @@
 import { Hono } from 'hono';
-import { db, avatars, Avatar } from '@repo/db';
+import { db, avatars, Avatar } from '../db';
 import { TEMP_USER_ID } from '../const';
 import { and, asc, eq } from 'drizzle-orm';
 import { zValidator } from '@hono/zod-validator';
 import { baseQueryForGetList } from '../lib/validator';
-import { createFilterSchema, generateCondition } from '../lib/queryUtils/filter';
-import z from 'zod';
+import { generateCondition } from '../lib/queryUtils/filter';
 import { generateSorting } from '../lib/queryUtils/sort';
+import { createInsertSchema } from 'drizzle-zod';
 
 
 // must write as chain method to make collect type-completion at hono-rpc
@@ -35,11 +35,11 @@ const app = new Hono()
 // GET /avatars
 .get('/', zValidator('query', baseQueryForGetList(avatars, {
     sortKeys: ['id', 'createdAt'],
-    filterKeys: ['id', 'name', 'userId'],
+    filterKeys: ['id', 'name', 'createdAt'],
   })), async (c) => {
   try {
-    // @ts-ignore
     const { limit, offset, sort, order, filter } = c.req.valid('query');
+    console.log({ limit, offset, sort, order, filter });
     const allAvatars = await db.select().from(avatars)
       .where(generateCondition(avatars, filter, TEMP_USER_ID))
       .orderBy(generateSorting(avatars, order, sort))
@@ -66,6 +66,36 @@ const app = new Hono()
   } catch (e) {
     console.error(e);
     return c.json({ error: 'Failed to fetch avatar' }, 500);
+  }
+})
+
+// PUT /avatars/:id
+.put('/:id', zValidator('json', createInsertSchema(avatars)), 
+async (c) => {
+  try {
+    const id = c.req.param('id');
+    const body = await c.req.valid('json');
+    if (!body.name) return c.json({ error: 'Name is required' }, 400);
+
+    const result = await db.update(avatars)
+      .set({
+        name: body.name,
+        storeUrl: body.storeUrl || null,
+        thumbnailUrl: body.thumbnailUrl || null,
+      })
+      .where(and(
+        eq(avatars.id, id),
+      ))
+      .returning();
+
+    if (result.length === 0) {
+      return c.json({ error: 'Avatar not found' }, 404);
+    }
+
+    return c.json<Avatar>(result[0]);
+  } catch (e) {
+    console.error(e);
+    return c.json({ error: 'Failed to update avatar' }, 500);
   }
 })
 

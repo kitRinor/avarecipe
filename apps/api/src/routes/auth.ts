@@ -3,7 +3,7 @@ import { setCookie, deleteCookie } from 'hono/cookie';
 import { z } from 'zod';
 import { zValidator } from '@hono/zod-validator';
 import { and, eq } from 'drizzle-orm';
-import { db, users } from '@repo/db';
+import { db, users } from '../db';
 import { hashPassword, verifyPassword, signToken } from '../lib/auth';
 import { requireAuth } from '../middleware/auth';
 import { BlankEnv } from 'hono/types';
