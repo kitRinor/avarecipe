@@ -28,7 +28,7 @@ export function PageLayout({ children }: { children: ReactNode }) {
       <header className="border-b bg-white dark:bg-zinc-900 sticky top-0 z-50">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
 
-          <Link to="/home" className="flex items-center gap-2 font-bold text-xl hover:opacity-80 transition-opacity">
+          <Link to="/dashboard" className="flex items-center gap-2 font-bold text-xl hover:opacity-80 transition-opacity">
             <Shirt className="h-6 w-6" /> {t("app.title")}
           </Link>
 

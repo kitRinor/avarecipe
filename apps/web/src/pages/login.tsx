@@ -29,7 +29,7 @@ export default function LoginPage() {
   // redirect if logged in
   useEffect(() => {
     if (!auth.isLoading && auth.user) {
-      navigate("/home");
+      navigate("/dashboard");
     }
   }, [auth.user, auth.isLoading, navigate]);
 
@@ -42,12 +42,12 @@ export default function LoginPage() {
     try {
       const {ok, error} = await auth.login(email, password); 
       if (ok) {
-        navigate("/home"); // ログイン成功
+        navigate("/dashboard"); // ログイン成功
       } else {
-        setError(error ?? 'unknown error'); // エラーメッセージ表示
+        setError(error ?? t('core.message.error_occurred')); // エラーメッセージ表示
       }
     } catch (err) {
-      setError(t('action.error_occurred'));
+      setError(t('core.message.error_occurred'));
     } finally {
       setIsLoading(false);
     }

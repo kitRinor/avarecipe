@@ -20,9 +20,9 @@ import { StoreItemInfo } from "@/lib/storeInfoUtils/fetchStoreItemInfo";
 import { PageLayout } from "@/components/common/PageLayout";
 import { PageHeader } from "@/components/common/PageHeader";
 
-type ItemDetail = InferResponseType<typeof api.items[':id']['$get'], 200>;
+type AvatarDetail = InferResponseType<typeof api.avatars[':id']['$get'], 200>;
 
-export default function EditItem() {
+export default function EditAvatar() {
   const { id } = useParams<{ id: string }>();
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -31,7 +31,7 @@ export default function EditItem() {
   const [isScraping, setIsScraping] = useState(false);
   const [isLoading, setLoading] = useState(true);
 
-  const [prevData, setPrevData] = useState<ItemDetail | null>(null);
+  const [prevData, setPrevData] = useState<AvatarDetail | null>(null);
 
   // 編集用State (初期値をpropsから設定)
   const [name, setName] = useState("");
@@ -56,7 +56,7 @@ export default function EditItem() {
     if (!id) return;
     try {
       setLoading(true);
-      const res = await api.items[':id'].$get({ param: { id } });
+      const res = await api.avatars[':id'].$get({ param: { id } });
       if (res.ok) {
         const data = await res.json();
         setPrevData(data);
@@ -65,7 +65,7 @@ export default function EditItem() {
         setStoreUrl(data.storeUrl || "");
         setThumbnailUrl(data.thumbnailUrl || undefined);
       } else {
-        navigate("/items");
+        navigate(-1);
       }
     } catch (e) {
       console.error(e);
@@ -155,7 +155,7 @@ export default function EditItem() {
     if (!id || !name) return;
     setIsSaving(true);
     try {
-      const res = await api.items[':id'].$put({
+      const res = await api.avatars[':id'].$put({
         param: { id },
         json: { 
           name, 
@@ -182,10 +182,10 @@ export default function EditItem() {
     if (!id || !confirm("本当に削除しますか？関連するコーデからも削除されます。")) return;
     
     try {
-      const res = await api.items[':id'].$delete({ param: { id } });
+      const res = await api.avatars[':id'].$delete({ param: { id } });
       if (res.ok) {
         toast.success("削除しました");
-        navigate("/items");
+        navigate("/dashboard/avatars");
       } else {
         toast.error("削除できませんでした");
       }
@@ -202,9 +202,10 @@ export default function EditItem() {
 
   return (
     <PageLayout>
+      {/* ヘッダー */}
       <PageHeader
-        title={t("items.edit.page_title")}
-        description={t("items.edit.page_description")}
+        title={t("avatars.edit.page_title")} 
+        description={t("avatars.edit.page_description")}
       />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -225,12 +226,12 @@ export default function EditItem() {
         <div className="md:col-span-2">
           <Card>
             <CardHeader>
-              <CardTitle>{t('items.edit.page_title')}</CardTitle>
+              <CardTitle>{t('avatars.edit.page_title')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               
               <div className="space-y-2">
-                <Label>{t('core.data.item.store_url')}</Label>
+                <Label>{t('core.data.avatar.store_url')}</Label>
                 <div className="flex gap-2">
                   <div className="relative flex-1">
                     <Input 
@@ -255,7 +256,7 @@ export default function EditItem() {
                     size="icon"
                     onClick={handleAutoFill} 
                     disabled={!storeUrl || isScraping}
-                    title={t('items.edit.auto_fill_tooltip')}
+                    title={t('avatars.edit.auto_fill_tooltip')}
                     className="border border-zinc-300 hover:border-zinc-400 dark:border-zinc-700 dark:hover:border-zinc-500"
                   >
                     {isScraping ? (
@@ -266,12 +267,12 @@ export default function EditItem() {
                   </Button>
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  {t('items.edit.store_url_help')}
+                  {t('avatars.edit.store_url_help')}
                 </p>
               </div>
 
               <div className="space-y-2">
-                <Label>{t('core.data.item.name')}</Label>
+                <Label>{t('core.data.avatar.name')}</Label>
                 <div className="flex gap-2">
                   <Input value={name} onChange={e => setName(e.target.value)} disabled={isScraping} />
                   <Button
@@ -279,7 +280,7 @@ export default function EditItem() {
                     size="icon"
                     onClick={handleApplyName}
                     disabled={isScraping || (!fetchedStoreInfo && !storeUrl)}
-                    title={t('items.edit.apply_name_tooltip')}
+                    title={t('avatars.edit.apply_name_tooltip')}
                   >
                     {isScraping ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
                   </Button>
@@ -303,7 +304,7 @@ export default function EditItem() {
                   <Trash2 className="h-4 w-4 mr-2" /> {t('core.action.delete')}
                 </Button>
                 <div className="flex gap-2">
-                  <Button variant="ghost" onClick={() => navigate(-1)}>
+                  <Button variant="ghost" onClick={() => navigate(-1)} disabled={isSaving || isScraping || isUploading}>
                     {t('core.action.cancel')}
                   </Button>
                   <Button onClick={handleUpdate} disabled={isSaving || isScraping || isUploading}>

@@ -59,7 +59,7 @@ export default function HomePage() {
       <div className="gap-8 flex flex-col">
         {/* --- クイックアクセス --- */}
         <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Link to="/matrix">
+          <Link to="matrix">
             <Card className="hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors cursor-pointer h-full border-2 border-transparent hover:border-zinc-200 dark:hover:border-zinc-800">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-lg font-bold">{t("home.matrix")}</CardTitle>
@@ -92,8 +92,8 @@ export default function HomePage() {
             data={avatars}
             isDialogOpen={openNewAvatar}
             setIsDialogOpen={setOpenNewAvatar}
-            onClickTitle={() => navigate("/avatars")}
-            onClickItem={(item) => navigate(`/avatars/${item.id}`)}
+            onClickTitle={() => navigate("avatars")}
+            onClickItem={(item) => navigate(`avatars/${item.id}`)}
             onSuccess={fetchAvatars}
           />
         </section>
@@ -104,8 +104,8 @@ export default function HomePage() {
             data={items}
             isDialogOpen={openNewItem}
             setIsDialogOpen={setOpenNewItem}
-            onClickTitle={() => navigate("/items")}
-            onClickItem={(item) => navigate(`/items/${item.id}`)}
+            onClickTitle={() => navigate("items")}
+            onClickItem={(item) => navigate(`items/${item.id}`)}
             onSuccess={fetchItems}
           />
         </section>

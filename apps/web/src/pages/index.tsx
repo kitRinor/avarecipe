@@ -13,7 +13,7 @@ export default function LandingPage() {
   // redirect if logged in
   useEffect(() => {
     if (!auth.isLoading && auth.user) {
-      navigate("/home");
+      navigate("/dashboard");
     }
   }, [auth.user, auth.isLoading, navigate]);
 

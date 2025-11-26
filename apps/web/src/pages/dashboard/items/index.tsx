@@ -17,15 +17,15 @@ import { ArrowLeft, Plus, User as UserIcon } from "lucide-react";
 // Type
 import type { InferResponseType } from "hono/client";
 import { PageHeader } from "@/components/common/PageHeader";
-import { AvatarAddDialog } from "@/components/features/avatars/AvatarAddDialog";
-type AvatarResponse = InferResponseType<typeof api.avatars[":id"]['$get'], 200>;
+import { ItemAddDialog } from "@/components/features/items/ItemAddDialog";
+type ItemResponse = InferResponseType<typeof api.items[":id"]['$get'], 200>;
 
-export default function AvatarsIndexPage() {
+export default function ItemsIndexPage() {
   const { t } = useTranslation();
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  const [avatars, setAvatars] = useState<AvatarResponse[]>([]);
+  const [items, setItems] = useState<ItemResponse[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   
   // 新規作成用State (スキーマに合わせて修正)
@@ -34,14 +34,14 @@ export default function AvatarsIndexPage() {
   const [newStoreUrl, setNewStoreUrl] = useState("");
 
   const fetchData = async () => {
-    const res = await api.avatars.$get({
+    const res = await api.items.$get({
       query: {
         limit: '50',
         order: 'desc',
         sort: 'createdAt',
       }
     });
-    if (res.ok) setAvatars(await res.json());
+    if (res.ok) setItems(await res.json());
   };
 
   useEffect(() => {
@@ -51,7 +51,7 @@ export default function AvatarsIndexPage() {
   const handleAdd = async () => {
     if (!newName) return;
     
-    await api.avatars.$post({ 
+    await api.items.$post({ 
       json: { 
         name: newName,
         thumbnailUrl: newThumbnailUrl || null, // imageUrl -> thumbnailUrl
@@ -70,12 +70,12 @@ export default function AvatarsIndexPage() {
   return (
     <PageLayout>
       {/* ヘッダー */}
-      <PageHeader 
-        title={t('avatars.list.page_title')} 
-        description={t('avatars.list.page_description')}
+      <PageHeader
+        title={t('items.list.page_title')}
+        description={t('items.list.page_description')}
       >
         <Button onClick={() => setIsDialogOpen(true)}><Plus className="h-4 w-4 mr-2" /> {t('core.action.add')}</Button>
-        <AvatarAddDialog 
+        <ItemAddDialog 
           open={isDialogOpen} 
           onOpenChange={setIsDialogOpen} 
           onSuccess={fetchData} 
@@ -84,12 +84,12 @@ export default function AvatarsIndexPage() {
 
       {/* リスト */}
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
-        {avatars.map((avatar) => (
-          <Link key={avatar.id} to={`/avatars/${avatar.id}`}>
+        {items.map((item) => (
+          <Link key={item.id} to={`${item.id}`}>
             <Card className="overflow-hidden hover:shadow-md transition-shadow cursor-pointer h-full">
               <div className="aspect-square bg-zinc-100 dark:bg-zinc-800 relative overflow-hidden text-zinc-300">
-                {avatar.thumbnailUrl ? (
-                  <img src={avatar.thumbnailUrl} alt={avatar.name} className="absolute inset-0 object-cover w-full h-full" />
+                {item.thumbnailUrl ? (
+                  <img src={item.thumbnailUrl} alt={item.name} className="absolute inset-0 object-cover w-full h-full" />
                 ) : (
                   <div className="absolute inset-0 flex items-center justify-center">
                     <UserIcon className="h-12 w-12" />
@@ -97,7 +97,7 @@ export default function AvatarsIndexPage() {
                 )}
               </div>
               <CardFooter className="p-3">
-                <span className="font-bold truncate w-full">{avatar.name}</span>
+                <span className="font-bold truncate w-full">{item.name}</span>
               </CardFooter>
             </Card>
           </Link>

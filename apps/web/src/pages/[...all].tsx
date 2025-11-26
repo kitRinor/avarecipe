@@ -20,7 +20,7 @@ export default function NotFoundPage() {
         <p className="text-zinc-500 dark:text-zinc-400">
             {t('not_found.page_not_found_description')}
         </p>
-        <Link to="/home">
+        <Link to="/">
           <Button className='mt-6'>{t('not_found.go_home')}</Button>
         </Link>
       </Card>
