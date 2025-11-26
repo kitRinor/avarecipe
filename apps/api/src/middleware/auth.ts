@@ -4,6 +4,13 @@ import { getCookie } from 'hono/cookie';
 import { BlankEnv, Env } from 'hono/types';
 import { AppEnv } from '@/type';
 
+
+interface AuthedEnv extends AppEnv {
+  Variables: {
+    userId: string;
+  };
+};
+
 /**
  * トークンを検証し、c.get('userId') にユーザーIDを設定する認証ミドルウェア
  */
@@ -39,10 +46,11 @@ export const authMiddleware = createMiddleware<AppEnv>(async (c, next) => {
 });
 
 // 認証必須のルートで使うヘルパー
-export const requireAuth = createMiddleware<AppEnv>(async (c, next) => {
+export const requireAuth = createMiddleware<AuthedEnv>(async (c, next) => {
   const userId = c.get('userId');
   if (!userId) {
     return c.json({ error: 'Unauthorized: Login required' }, 401);
   }
   await next();
 });
+

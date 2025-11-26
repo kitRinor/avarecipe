@@ -2,7 +2,7 @@ import { createFactory } from 'hono/factory';
 import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
 import { db } from '@/db';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import { avatars } from '@/db/schema/avatars';
 import { AppEnv } from '@/type';
 import { Hono } from 'hono';
@@ -18,8 +18,12 @@ const del = new Hono<AppEnv>()
     paramValidator,
     async (c) => {
       try {
+        const userId = c.get('userId')!;
         const { id } = c.req.valid('param');
-        const result = await db.delete(avatars).where(eq(avatars.id, id)).returning();
+        const result = await db.delete(avatars).where(and(
+          eq(avatars.id, id),
+          eq(avatars.userId, userId),
+        )).returning();
 
       if (result.length === 0) {
         return c.json({ error: 'Avatar not found' }, 404);

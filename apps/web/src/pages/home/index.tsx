@@ -6,13 +6,12 @@ import { useAuth } from "@/contexts/AuthContext";
 // UI Components
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { UserIcon, EllipsisIcon, ShirtIcon, Grid3X3Icon, PlusIcon } from "lucide-react";
-import { PageLayout } from "@/components/pageLayout";
+import { PageLayout } from "@/components/common/PageLayout";
 import { useTranslation } from "react-i18next";
 import type { Avatar, Item } from "@/lib/api";
+import { AvatarAddDialog } from "@/components/features/avatars/AvatarAddDialog";
+import { ItemAddDialog } from "@/components/features/items/ItemAddDialog";
 
 const MAX_VISIBLE = 10;
 
@@ -55,51 +54,6 @@ export default function HomePage() {
     if (res.ok) setItems(await res.json());
   };
 
-  // 追加処理
-  const handleAddAvatar = async (data: Partial<Avatar>) => {
-    // validate
-    if (!data.name || data.name.trim() === "") {
-      return { ok: false, errLoc: 'name', message: 'Name is required' };
-    }
-
-    const newData = {
-      ...data,
-      name: data.name.trim(),
-      storeUrl: data.storeUrl?.trim() || null,
-      thumbnailUrl: data.thumbnailUrl?.trim() || null,
-    }
-
-    try {
-      const res = await api.avatars.$post({ json: newData });
-      setOpenNewAvatar(false);
-      fetchAvatars();
-      return { ok: true  }; 
-    } catch (error) {
-      return { ok: false, message: error instanceof Error ? error.message : 'An error occurred' };
-    }
-  };
-  const handleAddItem = async (data: Partial<Item>) => {
-    // validate
-    if (!data.name || data.name.trim() === "") {
-      return { ok: false, errLoc: 'name', message: 'Name is required' };
-    }
-
-    const newData = {
-      ...data,
-      name: data.name.trim(),
-      storeUrl: data.storeUrl?.trim() || null,
-      thumbnailUrl: data.thumbnailUrl?.trim() || null,
-    }
-    try {
-      const res = await api.items.$post({ json: newData });
-      setOpenNewItem(false);
-      fetchItems(); 
-      return { ok: true  };
-    } catch (error) {
-      return { ok: false, message: error instanceof Error ? error.message : 'An error occurred' };
-    }
-  };
-
   return (
     <PageLayout>
       <div className="gap-8 flex flex-col">
@@ -140,7 +94,7 @@ export default function HomePage() {
             setIsDialogOpen={setOpenNewAvatar}
             onClickTitle={() => navigate("/avatars")}
             onClickItem={(item) => navigate(`/avatars/${item.id}`)}
-            handleAdd={handleAddAvatar}
+            onSuccess={fetchAvatars}
           />
         </section>
         {/* --- 所持アイテム --- */}
@@ -152,7 +106,7 @@ export default function HomePage() {
             setIsDialogOpen={setOpenNewItem}
             onClickTitle={() => navigate("/items")}
             onClickItem={(item) => navigate(`/items/${item.id}`)}
-            handleAdd={handleAddItem}
+            onSuccess={fetchItems}
           />
         </section>
       </div>
@@ -168,15 +122,10 @@ const MyAssetList = <T extends Avatar | Item>(props:{
   setIsDialogOpen: (open: boolean) => void;
   onClickTitle: () => void;
   onClickItem: (item: T) => void;
-  handleAdd: (item: Partial<T>) => Promise<{
-    ok: boolean;
-    errLoc?: string; 
-    message?: string;
-  }>;
+  onSuccess?: () => void;
 }) => {
 
   const { t } = useTranslation();
-  const [newData, setNewData] = useState<Partial<T>>({});
 
   const maxVisible = props.maxVisible ?? 10;
 
@@ -191,16 +140,7 @@ const MyAssetList = <T extends Avatar | Item>(props:{
     storeUrlField: props.t_mode === 'item' ? t("core.data.item.store_url") : t("core.data.avatar.store_url"),
     thumbnailUrlField: props.t_mode === 'item' ? t("core.data.item.thumbnail_url") : t("core.data.avatar.thumbnail_url"),
   }
-
-  const handleSubmit = async () => {
-    const res = await props.handleAdd(newData);
-    if (res.ok) {
-      setNewData({});
-      props.setIsDialogOpen(false);
-    } else {
-      alert(res.message ?? "Error occurred");
-    }
-  }
+  const DialogComponent = props.t_mode === 'item' ? ItemAddDialog : AvatarAddDialog;
 
   return (
     <Card className="hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors h-full border-2 border-transparent hover:border-zinc-200 dark:hover:border-zinc-800">
@@ -210,51 +150,12 @@ const MyAssetList = <T extends Avatar | Item>(props:{
           {trans.title}
         </CardTitle>
 
-        <Dialog open={props.isDialogOpen} onOpenChange={props.setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <Button size="sm"><PlusIcon className="h-4 w-4 mr-1" /> {t("core.action.add")}</Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>{trans.addDialogTitle}</DialogTitle>
-              <DialogDescription>
-                {trans.addDialogDescription}
-              </DialogDescription>
-            </DialogHeader>
-            <div className="space-y-4 py-4">
-              <div className="space-y-2">
-                <Label htmlFor="name">{trans.nameField}</Label>
-                <Input 
-                  id="name" 
-                  placeholder={t("core.action.input_placeholder", { field: trans.nameField })} 
-                  value={newData.name}
-                  onChange={(e) => setNewData({ ...newData, name: e.target.value })}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="store_url">{trans.storeUrlField}</Label>
-                <Input 
-                  id="store_url" 
-                  placeholder={t("core.action.input_placeholder", { field: trans.storeUrlField })} 
-                  value={newData.storeUrl ?? undefined}
-                  onChange={(e) => setNewData({ ...newData, storeUrl: e.target.value })}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="thumbnail_url">{trans.thumbnailUrlField}</Label>
-                <Input 
-                  id="thumbnail_url" 
-                  placeholder={t("core.action.input_placeholder", { field: trans.thumbnailUrlField })} 
-                  value={newData.thumbnailUrl ?? undefined}
-                  onChange={(e) => setNewData({ ...newData, thumbnailUrl: e.target.value })}
-                />
-              </div>
-            </div>
-            <DialogFooter>
-              <Button onClick={handleSubmit}>{t("core.action.add")}</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+        <Button onClick={() => props.setIsDialogOpen(true)}><PlusIcon className="h-4 w-4 mr-2" /> {t('core.action.add')}</Button>
+        <DialogComponent
+          open={props.isDialogOpen} 
+          onOpenChange={props.setIsDialogOpen} 
+          onSuccess={props.onSuccess} 
+        />
 
       </CardHeader>             
 

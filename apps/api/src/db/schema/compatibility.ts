@@ -10,10 +10,9 @@ export const compatibility = pgTable('compatibility', {
   itemId: uuid('item_id').references(() => items.id, { onDelete: 'cascade' }).notNull(),
   status: text('status', { enum: ['official', 'modified', 'unsupported'] }).default('unsupported').notNull(),
   note: text('note'),
-  updatedAt: timestamp('updated_at').defaultNow(),
-}, (t) => ({
-  pk: primaryKey({ columns: [t.avatarId, t.itemId] }),
-}));
+}, (t) => [
+  primaryKey({ columns: [t.avatarId, t.itemId] }),
+]);
 
 export type Compatibility = typeof compatibility.$inferSelect;
 export type NewCompatibility = typeof compatibility.$inferInsert;

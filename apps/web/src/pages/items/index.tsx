@@ -3,8 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { api } from "@/lib/api";
 import { useAuth } from "@/contexts/AuthContext";
-import { PageLayout } from "@/components/pageLayout";
-import { ImageUploader } from "@/components/imageUploader";
+import { PageLayout } from "@/components/common/PageLayout";
+import { ImageUploader } from "@/components/common/ImageUploader";
 
 // UI
 import { Button } from "@/components/ui/button";
@@ -16,7 +16,8 @@ import { ArrowLeft, Plus, User as UserIcon } from "lucide-react";
 
 // Type
 import type { InferResponseType } from "hono/client";
-import { PageHeader } from "@/components/pageHeader";
+import { PageHeader } from "@/components/common/PageHeader";
+import { ItemAddDialog } from "@/components/features/items/ItemAddDialog";
 type ItemResponse = InferResponseType<typeof api.items[":id"]['$get'], 200>;
 
 export default function ItemsIndexPage() {
@@ -73,37 +74,12 @@ export default function ItemsIndexPage() {
         title={t('items.list.page_title')}
         description={t('items.list.page_description')}
       >
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <Button><Plus className="h-4 w-4 mr-2" /> {t('core.action.add')}</Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>{t('items.list.add_item')}</DialogTitle>
-              <DialogDescription>{t('items.list.add_item_description')}</DialogDescription>
-            </DialogHeader>
-            
-            <div className="space-y-4 py-4">
-              <ImageUploader 
-                category="item" 
-                defaultUrl={newThumbnailUrl} 
-                onUploadSuccess={setNewThumbnailUrl} 
-              />
-              <div className="space-y-2">
-                <Label>{t('core.data.item.name')} <span className="text-red-500">*</span></Label>
-                <Input value={newName} onChange={e => setNewName(e.target.value)} placeholder="例: 桔梗" />
-              </div>
-              <div className="space-y-2">
-                <Label>{t('core.data.item.store_url')}</Label>
-                <Input value={newStoreUrl} onChange={e => setNewStoreUrl(e.target.value)} placeholder="https://booth.pm/..." />
-              </div>
-            </div>
-
-            <DialogFooter>
-              <Button onClick={handleAdd} disabled={!newName}>{t('core.action.add')}</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+        <Button onClick={() => setIsDialogOpen(true)}><Plus className="h-4 w-4 mr-2" /> {t('core.action.add')}</Button>
+        <ItemAddDialog 
+          open={isDialogOpen} 
+          onOpenChange={setIsDialogOpen} 
+          onSuccess={fetchData} 
+        />
       </PageHeader>
 
       {/* リスト */}

@@ -22,16 +22,12 @@ const update = new Hono<AppEnv>()
     zValidator('json', JsonSchema),
     async (c) => {
       try {
+        const userId = c.get('userId')!;
         const { avatarId, itemId } = c.req.valid('param');
         const { status } = c.req.valid('json');
-        const userId = c.get('userId');
-
-        if (!userId) {
-          return c.json({ error: 'Unauthorized' }, 401);
-        }
 
         const updatedCount = await db.update(compatibility)
-          .set({ status, updatedAt: new Date() })
+          .set({ status })
           .where(and(
             eq(compatibility.userId, userId),
             eq(compatibility.avatarId, avatarId),

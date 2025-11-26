@@ -2,17 +2,18 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { api } from "@/lib/api";
-import { PageLayout } from "@/components/pageLayout";
+import { PageLayout } from "@/components/common/PageLayout";
 
 // UI
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, ExternalLink, Pencil, Image as ImageIcon, Layers } from "lucide-react";
+import { ArrowLeft, ExternalLink, Pencil, Image as ImageIcon, Layers, UserIcon } from "lucide-react";
 
 // Type
 import type { InferResponseType } from "hono/client";
-import { PageHeader } from "@/components/pageHeader";
+import { PageHeader } from "@/components/common/PageHeader";
 type ItemDetail = InferResponseType<typeof api.items[':id']['$get'], 200>;
+type SharedOutfitList = InferResponseType<typeof api.outfits.shared.item[':id']['$get'], 200>;
 
 export default function ItemDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -20,6 +21,7 @@ export default function ItemDetailPage() {
   const { t } = useTranslation();
 
   const [item, setItem] = useState<ItemDetail | null>(null);
+  const [sharedOutfits, setSharedOutfits] = useState<SharedOutfitList>([]);
   const [loading, setLoading] = useState(true);
   
   const fetchData = async () => {
@@ -38,12 +40,26 @@ export default function ItemDetailPage() {
       setLoading(false);
     }
   };
+  // Fetch shared outfits that use this item
+  const fetchSharedOutfits = async () => {
+    if (!id) return;
+    try {
+      const res = await api.outfits.shared.item[':id'].$get({ param: { id } });
+      if (res.ok) {
+        const data = await res.json();
+        setSharedOutfits(data);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   useEffect(() => {
     fetchData();
+    fetchSharedOutfits();
   }, [id, navigate]);
 
-  if (loading) return <PageLayout><div className="p-10">{t("core.action.loading")}</div></PageLayout>;
+  if (loading) return <PageLayout><div className="p-10">{t("core.message.loading")}</div></PageLayout>;
   if (!item) return null;
 
   return (
@@ -100,13 +116,13 @@ export default function ItemDetailPage() {
                     {item.storeUrl}
                   </a>
                 ) : (
-                  <p className="text-sm text-zinc-400 mt-1">{t("core.action.no_data")}</p>
+                  <p className="text-sm text-zinc-400 mt-1">{t("core.message.no_data")}</p>
                 )}
               </div>
             </CardContent>
           </Card>
 
-          {/* 将来的な機能のプレースホルダー */}
+          {/* 他ユーザーのコーデ */}
           <Card className="bg-zinc-50 dark:bg-zinc-900/50 border-dashed">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-zinc-500">
@@ -115,9 +131,42 @@ export default function ItemDetailPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-zinc-400">
-                {t("core.action.no_data")}
-              </p>
+              {sharedOutfits.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {sharedOutfits.map((outfit) => (
+                    <div 
+                      key={outfit.id} 
+                      className="group bg-white dark:bg-zinc-900 rounded-lg border p-3 hover:shadow-md transition-shadow cursor-pointer"
+                      // onClick={() => navigate(`/outfits/${outfit.id}`)} // 将来的に詳細ページへ
+                    >
+                      {/* サムネイル */}
+                      <div className="aspect-video bg-zinc-100 dark:bg-zinc-800 rounded-md overflow-hidden mb-3 flex items-center justify-center relative">
+                        {outfit.imageUrl ? (
+                          <img src={outfit.imageUrl} alt={outfit.name} className="w-full h-full object-cover" />
+                        ) : (
+                          <UserIcon className="h-8 w-8 text-zinc-300" />
+                        )}
+                      </div>
+                      
+                      {/* 情報 */}
+                      <div>
+                        <h3 className="font-bold text-sm truncate">{outfit.name}</h3>
+                        <p className="text-xs text-zinc-500 dark:text-zinc-400 line-clamp-1 mt-0.5">
+                          {outfit.userDisplayName}
+                        </p>
+                        <p className="text-xs text-zinc-500 dark:text-zinc-400 line-clamp-1 mt-0.5">
+                          {outfit.description}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-8 text-zinc-400 text-sm">
+                  <p>{t("items.detail.no_used_in_coordinations")}</p>
+                  <p className="text-xs mt-2 opacity-70">※ ストアURLが設定されているアイテムのみ検索対象になります</p>
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>

@@ -3,20 +3,16 @@ import { db } from '@/db';
 import { requireAuth } from '@/middleware/auth';
 import { users } from '@/db/schema/users';
 import { AuthUser } from '.';
-import { Hono } from 'hono';
+import { Context, Hono } from 'hono';
 import { AppEnv } from '@/type';
-
+import { createMiddleware } from 'hono/factory';
 
 const me = new Hono<AppEnv>()
+.use(requireAuth)
 .get(
   '/',
-  requireAuth,
   async (c) => {
     const userId = c.get('userId');
-    if (!userId) {
-      return c.json({ error: 'Unauthorized' }, 401);
-    }
-    
     // Fetch latest user info from DB
     const user = await db.query.users.findFirst({ 
       where: eq(users.id, userId),

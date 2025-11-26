@@ -8,6 +8,7 @@ import { TEMP_USER_ID } from '@/const';
 import { Avatar, avatars } from '@/db/schema/avatars';
 import { AppEnv } from '@/type';
 import { Hono } from 'hono';
+import { AvatarRes } from '.';
 
 
 const list = new Hono<AppEnv>()
@@ -19,15 +20,16 @@ const list = new Hono<AppEnv>()
     })),
     async (c) => {
       try {
+        const userId = c.get('userId')!;
         const { limit, offset, sort, order, filter } = c.req.valid('query');
         
         const result = await db.select().from(avatars)
-          .where(generateCondition(avatars, filter, TEMP_USER_ID))
+          .where(generateCondition(avatars, filter, userId))
           .orderBy(generateSorting(avatars, order, sort))
           .limit(limit)
           .offset(offset);
 
-        return c.json(result, 200);
+        return c.json<AvatarRes[]>(result, 200);
       } catch (e) {
         console.error(e);
         return c.json({ error: 'Failed to fetch avatars' }, 500);

@@ -4,7 +4,7 @@ import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
 import { db } from '@/db';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import { _template_ } from '@/db/schema/_template_';
 
 const paramValidator = zValidator('param', z.object({
@@ -17,8 +17,12 @@ const del = new Hono<AppEnv>()
     paramValidator,
     async (c) => {
       try {
+        const userId = c.get('userId')!;
         const { id } = c.req.valid('param');
-        const result = await db.delete(_template_).where(eq(_template_.id, id)).returning();
+        const result = await db.delete(_template_).where(and(
+          eq(_template_.id, id),
+          eq(_template_.userId, userId) // require ownership
+        )).returning();
 
         if (result.length === 0) {
           return c.json({ error: 'not found' }, 404);

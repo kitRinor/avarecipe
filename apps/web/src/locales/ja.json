@@ -23,11 +23,22 @@
       "back": "戻る",
       "search": "検索",
       "reset": "リセット",
-      "load_more": "もっと見る",
       "input_placeholder": "{{field}}を入力してください",
+      "loading": "..."
+    },
+    "message": {
+      "__": "操作結果やエラーメッセージに関する文言",
+      "fetch_success": "取得しました",
+      "fetch_failed": "取得できませんでした",
+      "create_success": "作成しました",
+      "create_failed": "作成できませんでした",
+      "update_success": "更新しました",
+      "update_failed": "更新できませんでした",
+      "delete_success": "削除しました",
+      "delete_failed": "削除できませんでした",
+      "error_occurred": "エラーが発生しました",
       "no_data": "データがありません",
-      "loading": "ローディング中...",
-      "error_occurred": "エラーが発生しました"
+      "loading": "読み込み中..."
     },
     "data": {
       "__": "データ,プロパティ名などに関する文言",
@@ -113,7 +124,8 @@
       "page_title": "アバター詳細",
       "page_description": "アバターの詳細情報と関連コーデ一覧",
       "store_link": "ストアで見る",
-      "used_in_coordinations": "このアイテムを含むコーデ"
+      "used_in_coordinations": "このアバターを含むコーデ",
+      "no_used_in_coordinations": "このアバターを使用した公開されたコーデはまだありません。"
     },
     "edit": {
       "page_title": "アバター編集",
@@ -144,7 +156,8 @@
       "page_title": "アイテム詳細",
       "page_description": "アイテムの詳細情報と関連コーデ一覧",
       "store_link": "ストアで見る",
-      "used_in_coordinations": "このアイテムを含むコーデ"
+      "used_in_coordinations": "このアイテムを含むコーデ",
+      "no_used_in_coordinations": "このアイテムを使用した公開されたコーデはまだありません。"
     },
     "edit": {
       "page_title": "アイテム編集",

@@ -4,7 +4,7 @@ import { AppEnv } from '@/type';
 import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
 import { db } from '@/db';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import { items } from '@/db/schema/items';
 
 
@@ -18,8 +18,12 @@ const del = new Hono<AppEnv>()
     paramValidator,
     async (c) => {
       try {
+        const userId = c.get('userId')!;
         const { id } = c.req.valid('param');
-        const result = await db.delete(items).where(eq(items.id, id)).returning();
+        const result = await db.delete(items).where(and(
+          eq(items.id, id),
+          eq(items.userId, userId),
+        )).returning();
 
         if (result.length === 0) {
           return c.json({ error: 'not found' }, 404);

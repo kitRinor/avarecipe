@@ -9,7 +9,7 @@ import { avatars } from './schema/avatars';
 import { users } from './schema/users';
 import { items } from './schema/items';
 import { compatibility } from './schema/compatibility';
-import { outfits } from './schema/outfits';
+import { outfitItems, outfits } from './schema/outfits';
 
 // スキーマの定義
 export const schema = {
@@ -19,6 +19,7 @@ export const schema = {
   items,
   compatibility,
   outfits,
+  outfitItems,
 };
 
 const connectionString = process.env.DATABASE_URL;

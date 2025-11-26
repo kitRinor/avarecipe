@@ -8,6 +8,7 @@ import { generateCondition } from '@/lib/queryUtils/filter';
 import { generateSorting } from '@/lib/queryUtils/sort';
 import { TEMP_USER_ID } from '@/const';
 import { items } from '@/db/schema/items';
+import { ItemRes } from '.';
 
 
 const list = new Hono<AppEnv>()
@@ -19,15 +20,16 @@ const list = new Hono<AppEnv>()
     })),
     async (c) => {
       try {
+        const userId = c.get('userId')!;
         const { limit, offset, sort, order, filter } = c.req.valid('query');
         
         const allAvatars = await db.select().from(items)
-          .where(generateCondition(items, filter, TEMP_USER_ID))
+          .where(generateCondition(items, filter, userId))
           .orderBy(generateSorting(items, order, sort))
           .limit(limit)
           .offset(offset);
 
-        return c.json(allAvatars, 200);
+        return c.json<ItemRes[]>(allAvatars, 200);
       } catch (e) {
         console.error(e);
         return c.json({ error: 'Failed to fetch' }, 500);

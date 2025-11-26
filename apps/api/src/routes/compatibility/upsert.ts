@@ -6,6 +6,7 @@ import { eq, and } from 'drizzle-orm';
 import { db } from '@/db';
 import { compatibility } from '@/db/schema/compatibility';
 import { de } from 'zod/locales';
+import { requireAuth } from '@/middleware/auth';
 
 
 
@@ -21,12 +22,8 @@ const upsert = new Hono<AppEnv>()
     zValidator('json', JsonSchema),
     async (c) => {
       try {
+        const userId = c.get('userId')!;
         const { avatarId, itemId, status } = c.req.valid('json');
-        const userId = c.get('userId');
-
-        if (!userId) {
-          return c.json({ error: 'Unauthorized' }, 401);
-        }
 
         // Check if the record already exists for this user
         const existing = await db.select()
@@ -41,7 +38,7 @@ const upsert = new Hono<AppEnv>()
         if (existing.length > 0) {
           // Update existing record
           await db.update(compatibility)
-            .set({ status, updatedAt: new Date() })
+            .set({ status })
             .where(and(
               eq(compatibility.userId, userId),
               eq(compatibility.avatarId, avatarId),

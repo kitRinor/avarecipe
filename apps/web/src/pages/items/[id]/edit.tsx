@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { api } from "@/lib/api";
 import { fetchStoreItemInfo } from "@/lib/storeInfoUtils/fetchStoreItemInfo";
 import { useS3Upload } from "@/hooks/useS3Upload";
-import { ImageCandidateList } from "@/components/ImageCandidateList";
+import { ImageCandidateList } from "@/components/common/ImageCandidateList";
 
 // UI
 import { Button } from "@/components/ui/button";
@@ -17,8 +17,8 @@ import { toast } from "sonner";
 // Type
 import type { InferResponseType } from "hono/client";
 import { StoreItemInfo } from "@/lib/storeInfoUtils/fetchStoreItemInfo";
-import { PageLayout } from "@/components/pageLayout";
-import { PageHeader } from "@/components/pageHeader";
+import { PageLayout } from "@/components/common/PageLayout";
+import { PageHeader } from "@/components/common/PageHeader";
 
 type ItemDetail = InferResponseType<typeof api.items[':id']['$get'], 200>;
 
@@ -166,7 +166,7 @@ export default function EditItem() {
 
       if (res.ok) {
         toast.success("更新しました");
-        navigate(`/items/${id}`);
+        navigate(-1);
       } else {
         toast.error("更新に失敗しました");
       }

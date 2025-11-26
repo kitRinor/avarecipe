@@ -7,6 +7,16 @@ import get from './get';
 import update from './update';
 import del from './delete';
 
+export interface ItemRes {
+  id: string;
+  userId: string;
+  name: string;
+  category: "cloth" | "hair" | "accessory" | "texture" | "prop" | "gimmick" | "other";
+  storeUrl: string | null;
+  thumbnailUrl: string | null;
+  createdAt: Date | null;
+}
+
 const app = new Hono<AppEnv>()
   .route('/', list)
   .route('/', create)

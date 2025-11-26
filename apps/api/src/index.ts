@@ -7,14 +7,16 @@ import { authMiddleware } from './middleware/auth';
 // Import sub-apps
 import authRoute from './routes/auth';
 import s3Route from './routes/s3';
+import proxyRoute from './routes/proxy';
 import matrixRoute from './routes/matrix';
 import avatarsRoute from './routes/avatars';
 import itemsRoute from './routes/items';
 import compatibilityRoute from './routes/compatibility';
 import outfitsRoute from './routes/outfits';
-import { AppEnv } from './type';
 
 import { config } from 'dotenv';
+import tmp from './routes/tmp';
+import { AppEnv } from './type';
 config();
 
 
@@ -32,11 +34,12 @@ app.use('/*', cors({
 // Apply auth middleware globally
 app.use('/*', authMiddleware);
 
-
 // Mount routes
+app.basePath('/api/v1');
 const routes = app
   .route('/auth', authRoute)
   .route('/s3', s3Route)  
+  .route('/proxy', proxyRoute)
   .route('/matrix', matrixRoute)
   .route('/avatars', avatarsRoute)
   .route('/items', itemsRoute)

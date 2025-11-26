@@ -6,7 +6,7 @@ import login from './login';
 import me from './me';
 import logout from './logout';
 
-export type AuthUser = {
+export interface AuthUser {
   id: string;
   displayName: string | null;
   handle: string;
@@ -25,10 +25,9 @@ export const cookieOptions = {
 };
 
 const app = new Hono<AppEnv>()
-  .route('/', login)
+  .route('/me', me)
   .route('/register', register)
   .route('/login', login)
-  .route('/me', me)
   .route('/logout', logout);
 
 export default app;

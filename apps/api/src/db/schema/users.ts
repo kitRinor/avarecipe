@@ -7,12 +7,11 @@ export const users = pgTable('users', {
   password: text('password').notNull(),
   displayName: text('display_name'),
   avatarUrl: text('avatar_url'),
-  isPublic: boolean('is_public').default(false).notNull(),
   createdAt: timestamp('created_at').defaultNow(),
-}, (t) => ({
-  handleIndex: index('users_handle_index').on(t.handle),
-  emailIndex: index('users_email_index').on(t.email),
-}));
+}, (t) => [
+  index('users_handle_index').on(t.handle),
+  index('users_email_index').on(t.email),
+]);
 
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
