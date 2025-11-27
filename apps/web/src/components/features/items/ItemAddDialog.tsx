@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { api } from "@/lib/api";
+import { dashboardApi } from "@/lib/api";
 import { fetchStoreItemInfo, StoreItemInfo } from "@/lib/storeInfoUtils/fetchStoreItemInfo";
 import { useS3Upload } from "@/hooks/useS3Upload";
 import { ImageCandidateList, type CandidateImage } from "@/components/common/ImageCandidateList";
@@ -90,7 +90,7 @@ export function ItemAddDialog({ open, onOpenChange, onSuccess }: ItemAddDialogPr
     if (!name) return;
     setIsSubmitting(true);
     try {
-      const res = await api.items.$post({
+      const res = await dashboardApi.items.$post({
         json: {
           name,
           storeUrl: storeUrl || null,

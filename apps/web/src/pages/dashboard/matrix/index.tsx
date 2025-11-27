@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { api } from "@/lib/api";
+import { dashboardApi } from "@/lib/api";
 import { useAuth } from "@/contexts/AuthContext";
 import { PageLayout } from "@/components/common/PageLayout";
 
@@ -18,7 +18,7 @@ import { cn } from "@/lib/utils";
 import type { InferResponseType } from "hono/client";
 import { PageHeader } from "@/components/common/PageHeader";
 
-type MatrixResponse = InferResponseType<typeof api.matrix.$get, 200>;
+type MatrixResponse = InferResponseType<typeof dashboardApi.matrix.$get, 200>;
 
 export default function MatrixPage() {
   const { t } = useTranslation();
@@ -31,7 +31,7 @@ export default function MatrixPage() {
   // Fetch matrix data on load
   const fetchMatrix = async () => {
     try {
-      const res = await api.matrix.$get();
+      const res = await dashboardApi.matrix.$get();
       if (res.ok) {
         setData(await res.json());
       } else {
@@ -78,7 +78,7 @@ export default function MatrixPage() {
     setData(newData);
 
     try {
-      const res = await api.compatibility.$post({
+      const res = await dashboardApi.compatibility.$post({
         json: { avatarId, itemId, status: nextStatus }
       });
 

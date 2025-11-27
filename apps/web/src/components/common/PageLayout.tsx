@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Shirt } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { api } from "@/lib/api";
+import { authApi, dashboardApi } from "@/lib/api";
 
 export function PageLayout({ children }: { children: ReactNode }) {
   const { t } = useTranslation();
@@ -37,7 +37,7 @@ export function PageLayout({ children }: { children: ReactNode }) {
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
                 <Avatar onClick={async () => {
-                  const res = await api.auth.me.$get()
+                  const res = await authApi.me.$get()
                   console.log(res);
                 }} className="h-8 w-8">
                   <AvatarImage src={auth.user.avatarUrl ?? undefined} />

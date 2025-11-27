@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
-import { db } from '../db';
+import { db } from '../../db';
 import { eq } from 'drizzle-orm';
-import { TEMP_USER_ID } from '../const';
+import { TEMP_USER_ID } from '../../const';
 import { avatars } from '@/db/schema/avatars';
 import { items } from '@/db/schema/items';
 import { compatibility } from '@/db/schema/compatibility';

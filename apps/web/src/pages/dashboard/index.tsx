@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { api } from "@/lib/api";
+import { dashboardApi } from "@/lib/api";
 import { useAuth } from "@/contexts/AuthContext";
 
 // UI Components
@@ -34,7 +34,7 @@ export default function HomePage() {
 
   // 一覧取得
   const fetchAvatars = async () => {
-    const res = await api.avatars.$get({
+    const res = await dashboardApi.avatars.$get({
       query: { 
         limit: MAX_VISIBLE+1,
         order: 'desc',
@@ -44,7 +44,7 @@ export default function HomePage() {
     if (res.ok) setAvatars(await res.json());
   };
   const fetchItems = async () => {
-    const res = await api.items.$get({
+    const res = await dashboardApi.items.$get({
       query:{
         limit: '16',
         order: 'desc',

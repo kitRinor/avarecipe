@@ -6,16 +6,11 @@ import { authMiddleware } from './middleware/auth';
 
 // Import sub-apps
 import authRoute from './routes/auth';
-import s3Route from './routes/s3';
-import proxyRoute from './routes/proxy';
-import matrixRoute from './routes/matrix';
-import avatarsRoute from './routes/avatars';
-import itemsRoute from './routes/items';
-import compatibilityRoute from './routes/compatibility';
-import outfitsRoute from './routes/outfits';
+import adminRoute from './routes/admin';
+import dashboardRoute from './routes/dashboard';
+import publicRoute from './routes/public';
 
 import { config } from 'dotenv';
-import tmp from './routes/tmp';
 import { AppEnv } from './type';
 config();
 
@@ -35,16 +30,11 @@ app.use('/*', cors({
 app.use('/*', authMiddleware);
 
 // Mount routes
-app.basePath('/api/v1');
 const routes = app
-  .route('/auth', authRoute)
-  .route('/s3', s3Route)  
-  .route('/proxy', proxyRoute)
-  .route('/matrix', matrixRoute)
-  .route('/avatars', avatarsRoute)
-  .route('/items', itemsRoute)
-  .route('/compatibility', compatibilityRoute)
-  .route('/outfits', outfitsRoute)
+  .route('/auth', authRoute) // 認証関連
+  .route('/admin', adminRoute) // 管理コンソール用(認証必須)
+  .route('/dashboard', dashboardRoute) // ダッシュボード用(認証必須)
+  .route('/public', publicRoute) // 公開ページ用
 
 export type AppType = typeof routes;
 

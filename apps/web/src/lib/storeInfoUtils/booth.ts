@@ -1,4 +1,4 @@
-import { api } from '@/lib/api';
+import { dashboardApi } from '@/lib/api';
 import { StoreItemInfo } from './fetchStoreItemInfo';
 
 
@@ -42,7 +42,7 @@ export const fetchBoothItem = async (inputUrl: string): Promise<StoreItemInfo | 
     const jsonUrl = inputUrl.endsWith('/') ? `${inputUrl.slice(0, -1)}.json` : `${inputUrl}.json`;
 
     // 3. Proxy API経由でJSONを取得
-    const res = await api.proxy.$get({
+    const res = await dashboardApi.proxy.$get({
       query: { url: jsonUrl }
     });
 

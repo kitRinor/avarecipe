@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { api } from '@/lib/api'; 
+import { dashboardApi } from '@/lib/api'; 
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner'; // ShadcnのToast (Sonner) を使ってフィードバック
 
 // Type
 import type { InferResponseType } from "hono/client";
-type PresignedResponse = InferResponseType<typeof api.s3.presigned.$post, 200>;
+type PresignedResponse = InferResponseType<typeof dashboardApi.s3.presigned.$post, 200>;
 
 
 /**
@@ -35,7 +35,7 @@ export const useS3Upload = () => {
       const contentType = file.type;
       
       // 2. APIから署名付きURLをもらう (RPC)
-      const presignedRes = await api.s3.presigned.$post({
+      const presignedRes = await dashboardApi.s3.presigned.$post({
         json: { fileExt: fileExt as any, contentType: contentType as any, category }
       });
 

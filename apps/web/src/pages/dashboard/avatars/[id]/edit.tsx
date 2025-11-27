@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { api } from "@/lib/api";
+import { dashboardApi } from "@/lib/api";
 import { fetchStoreItemInfo } from "@/lib/storeInfoUtils/fetchStoreItemInfo";
 import { useS3Upload } from "@/hooks/useS3Upload";
 import { ImageCandidateList } from "@/components/common/ImageCandidateList";
@@ -20,7 +20,7 @@ import { StoreItemInfo } from "@/lib/storeInfoUtils/fetchStoreItemInfo";
 import { PageLayout } from "@/components/common/PageLayout";
 import { PageHeader } from "@/components/common/PageHeader";
 
-type AvatarDetail = InferResponseType<typeof api.avatars[':id']['$get'], 200>;
+type AvatarDetail = InferResponseType<typeof dashboardApi.avatars[':id']['$get'], 200>;
 
 export default function EditAvatar() {
   const { id } = useParams<{ id: string }>();
@@ -56,7 +56,7 @@ export default function EditAvatar() {
     if (!id) return;
     try {
       setLoading(true);
-      const res = await api.avatars[':id'].$get({ param: { id } });
+      const res = await dashboardApi.avatars[':id'].$get({ param: { id } });
       if (res.ok) {
         const data = await res.json();
         setPrevData(data);
@@ -155,7 +155,7 @@ export default function EditAvatar() {
     if (!id || !name) return;
     setIsSaving(true);
     try {
-      const res = await api.avatars[':id'].$put({
+      const res = await dashboardApi.avatars[':id'].$put({
         param: { id },
         json: { 
           name, 
@@ -182,7 +182,7 @@ export default function EditAvatar() {
     if (!id || !confirm("本当に削除しますか？関連するコーデからも削除されます。")) return;
     
     try {
-      const res = await api.avatars[':id'].$delete({ param: { id } });
+      const res = await dashboardApi.avatars[':id'].$delete({ param: { id } });
       if (res.ok) {
         toast.success("削除しました");
         navigate("/dashboard/avatars");

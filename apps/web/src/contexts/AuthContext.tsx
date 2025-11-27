@@ -1,8 +1,8 @@
-import { api } from "@/lib/api";
+import { authApi, dashboardApi } from "@/lib/api";
 import { InferResponseType } from "hono/client";
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 
-export type AuthUser = InferResponseType<typeof api.auth.me.$get, 200>;
+export type AuthUser = InferResponseType<typeof authApi.me.$get, 200>;
 
 // const DUMMY_USER: AuthUser = {
 //   id: "00000000-0000-0000-0000-000000000000",
@@ -28,7 +28,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const checkSession = async () => {
       setIsLoading(true);
       try {
-        const res = await api.auth.me.$get(); // 認証チェック & ユーザー情報取得
+        const res = await authApi.me.$get(); // 認証チェック & ユーザー情報取得
         if (res.ok) {
           const user = await res.json();
           setUser(user);
@@ -47,7 +47,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = async (email: string, password: string) => {
     setIsLoading(true);
     try {
-      const res = await api.auth.login.$post({ json: { email, password } });
+      const res = await authApi.login.$post({ json: { email, password } });
       if (res.ok) {
         const user = await res.json();
         setUser(user);
@@ -68,7 +68,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = async () => {
     setIsLoading(true);
     try {
-      const res = await api.auth.logout.$put();
+      const res = await authApi.logout.$put();
       if (res.ok) {
         setUser(null);
       } else {

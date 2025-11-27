@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { api } from "@/lib/api";
+import { dashboardApi } from "@/lib/api";
 import { PageLayout } from "@/components/common/PageLayout";
 
 // UI
@@ -12,8 +12,8 @@ import { ArrowLeft, ExternalLink, Pencil, Image as ImageIcon, Layers, UserIcon }
 // Type
 import type { InferResponseType } from "hono/client";
 import { PageHeader } from "@/components/common/PageHeader";
-type AvatarDetail = InferResponseType<typeof api.avatars[':id']['$get'], 200>;
-type SharedOutfitList = InferResponseType<typeof api.outfits.shared.item[':id']['$get'], 200>;
+type AvatarDetail = InferResponseType<typeof dashboardApi.avatars[':id']['$get'], 200>;
+type SharedOutfitList = InferResponseType<typeof dashboardApi.outfits.shared.item[':id']['$get'], 200>;
 
 export default function AvatarDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -27,7 +27,7 @@ export default function AvatarDetailPage() {
   const fetchData = async () => {
     if (!id) return;
     try {
-      const res = await api.avatars[':id'].$get({ param: { id } });
+      const res = await dashboardApi.avatars[':id'].$get({ param: { id } });
       if (res.ok) {
         const data = await res.json();
         setAvatar(data);
@@ -44,7 +44,7 @@ export default function AvatarDetailPage() {
   const fetchSharedOutfits = async () => {
     if (!id) return;
     try {
-      const res = await api.outfits.shared.avatar[':id'].$get({ param: { id } });
+      const res = await dashboardApi.outfits.shared.avatar[':id'].$get({ param: { id } });
       if (res.ok) {
         const data = await res.json();
         setSharedOutfits(data);

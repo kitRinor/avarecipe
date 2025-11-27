@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { api } from "@/lib/api";
+import { dashboardApi } from "@/lib/api";
 import { useAuth } from "@/contexts/AuthContext";
 import { PageLayout } from "@/components/common/PageLayout";
 import { ImageUploader } from "@/components/common/ImageUploader";
@@ -18,7 +18,7 @@ import { ArrowLeft, Plus, User as UserIcon } from "lucide-react";
 import type { InferResponseType } from "hono/client";
 import { PageHeader } from "@/components/common/PageHeader";
 import { AvatarAddDialog } from "@/components/features/avatars/AvatarAddDialog";
-type AvatarResponse = InferResponseType<typeof api.avatars[":id"]['$get'], 200>;
+type AvatarResponse = InferResponseType<typeof dashboardApi.avatars[":id"]['$get'], 200>;
 
 export default function AvatarsIndexPage() {
   const { t } = useTranslation();
@@ -34,7 +34,7 @@ export default function AvatarsIndexPage() {
   const [newStoreUrl, setNewStoreUrl] = useState("");
 
   const fetchData = async () => {
-    const res = await api.avatars.$get({
+    const res = await dashboardApi.avatars.$get({
       query: {
         limit: '50',
         order: 'desc',
@@ -51,7 +51,7 @@ export default function AvatarsIndexPage() {
   const handleAdd = async () => {
     if (!newName) return;
     
-    await api.avatars.$post({ 
+    await dashboardApi.avatars.$post({ 
       json: { 
         name: newName,
         thumbnailUrl: newThumbnailUrl || null, // imageUrl -> thumbnailUrl

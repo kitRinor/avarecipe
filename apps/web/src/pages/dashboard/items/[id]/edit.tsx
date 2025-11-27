@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { api } from "@/lib/api";
+import { dashboardApi } from "@/lib/api";
 import { fetchStoreItemInfo } from "@/lib/storeInfoUtils/fetchStoreItemInfo";
 import { useS3Upload } from "@/hooks/useS3Upload";
 import { ImageCandidateList } from "@/components/common/ImageCandidateList";
@@ -20,7 +20,7 @@ import { StoreItemInfo } from "@/lib/storeInfoUtils/fetchStoreItemInfo";
 import { PageLayout } from "@/components/common/PageLayout";
 import { PageHeader } from "@/components/common/PageHeader";
 
-type ItemDetail = InferResponseType<typeof api.items[':id']['$get'], 200>;
+type ItemDetail = InferResponseType<typeof dashboardApi.items[':id']['$get'], 200>;
 
 export default function EditItem() {
   const { id } = useParams<{ id: string }>();
@@ -56,7 +56,7 @@ export default function EditItem() {
     if (!id) return;
     try {
       setLoading(true);
-      const res = await api.items[':id'].$get({ param: { id } });
+      const res = await dashboardApi.items[':id'].$get({ param: { id } });
       if (res.ok) {
         const data = await res.json();
         setPrevData(data);
@@ -155,7 +155,7 @@ export default function EditItem() {
     if (!id || !name) return;
     setIsSaving(true);
     try {
-      const res = await api.items[':id'].$put({
+      const res = await dashboardApi.items[':id'].$put({
         param: { id },
         json: { 
           name, 
@@ -182,7 +182,7 @@ export default function EditItem() {
     if (!id || !confirm("本当に削除しますか？関連するコーデからも削除されます。")) return;
     
     try {
-      const res = await api.items[':id'].$delete({ param: { id } });
+      const res = await dashboardApi.items[':id'].$delete({ param: { id } });
       if (res.ok) {
         toast.success("削除しました");
         navigate("/dashboard/items");
