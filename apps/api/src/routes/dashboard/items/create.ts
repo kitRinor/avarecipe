@@ -3,7 +3,6 @@ import { Hono } from 'hono';
 import { AppEnv } from '@/type';
 import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
-import { TEMP_USER_ID } from '@/const';
 import { db } from '@/db';
 import { items } from '@/db/schema/items';
 import { ItemRes } from '.';

@@ -1,7 +1,6 @@
 import { createFactory } from 'hono/factory';
 import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
-import { TEMP_USER_ID } from '@/const';
 import { db } from '@/db';
 import { _template_ } from '@/db/schema/_template_';
 import { Hono } from 'hono';

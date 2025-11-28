@@ -6,7 +6,6 @@ import { db } from '@/db';
 import { baseQueryForGetList } from '@/lib/validator';
 import { generateCondition } from '@/lib/queryUtils/filter';
 import { generateSorting } from '@/lib/queryUtils/sort';
-import { TEMP_USER_ID } from '@/const';
 import { items } from '@/db/schema/items';
 import { ItemRes } from '.';
 

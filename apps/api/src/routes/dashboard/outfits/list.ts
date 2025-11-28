@@ -5,7 +5,6 @@ import { db } from '@/db';
 import { baseQueryForGetList } from '@/lib/validator';
 import { generateCondition } from '@/lib/queryUtils/filter';
 import { generateSorting } from '@/lib/queryUtils/sort';
-import { TEMP_USER_ID } from '@/const';
 import { outfits } from '@/db/schema/outfits';
 
 
@@ -18,10 +17,11 @@ const list = new Hono<AppEnv>()
     })),
     async (c) => {
     try {
+      const userId = c.get('userId')!;
       const { limit, offset, sort, order, filter } = c.req.valid('query');
       
       const allAvatars = await db.select().from(outfits)
-        .where(generateCondition(outfits, filter, TEMP_USER_ID))
+        .where(generateCondition(outfits, filter, userId))
         .orderBy(generateSorting(outfits, order, sort))
         .limit(limit)
         .offset(offset);

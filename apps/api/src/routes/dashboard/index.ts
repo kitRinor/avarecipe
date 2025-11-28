@@ -20,5 +20,4 @@ const app = new Hono<AppEnv>()
   .route('/compatibility', compatibilityRoute)
   .route('/outfits', outfitsRoute)
 
-export type DashboardAppType = typeof app;
 export default app;

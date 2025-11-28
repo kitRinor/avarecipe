@@ -5,7 +5,6 @@ import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { v4 as uuidv4 } from 'uuid';
 import { s3Client, S3_BUCKET_NAME, S3_PUBLIC_URL, resolveS3Url } from '../../lib/s3';
-import { TEMP_USER_ID } from '../../const';
 import { requireAuth } from '../../middleware/auth';
 
 /**
@@ -32,11 +31,9 @@ const app = new Hono()
   zValidator('json', PresignedUrlSchema),
   async (c) => {
     try {
+      const userId = c.get('userId')!;
       const { contentType, fileExt, category } = c.req.valid('json');
       
-      // 1. Auth Check (TEMP_USER_IDを使用)
-      const userId = TEMP_USER_ID; 
-
       // 2. determine S3 Key
       //  public/[userId]/[category]/[uuid].[ext]
       const fileName = `${uuidv4()}.${fileExt}`;

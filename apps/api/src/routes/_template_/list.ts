@@ -4,7 +4,6 @@ import { Hono } from 'hono';
 import { baseQueryForGetList } from '@/lib/validator';
 import { generateCondition } from '@/lib/queryUtils/filter';
 import { generateSorting } from '@/lib/queryUtils/sort';
-import { TEMP_USER_ID } from '@/const';
 import { _template_ } from '@/db/schema/_template_';
 import { db } from '@/db';
 import { Res } from '.';
