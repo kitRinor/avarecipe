@@ -10,12 +10,14 @@ import { users } from './schema/users';
 import { items } from './schema/items';
 import { compatibility } from './schema/compatibility';
 import { outfitItems, outfits } from './schema/outfits';
+import { profiles } from './schema/profiles';
 
 // スキーマの定義
 export const schema = {
   ...relations,
-  avatars,
   users,
+  profiles,
+  avatars,
   items,
   compatibility,
   outfits,

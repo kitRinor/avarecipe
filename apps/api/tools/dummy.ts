@@ -100,11 +100,15 @@ async function main() {
       const uniqueSuffix = getRandomString(8);
       
       const [user] = await db.insert(schema.users).values({
-        handle: `usr_${uniqueSuffix}`,
         email: `usr_${uniqueSuffix}@example.com`,
         password: PASSWORD_HASH,
+      }).returning();
+      const [profile] = await db.insert(schema.profiles).values({
+        userId: user.id,
+        handle: `usr_${uniqueSuffix}`,
         displayName: `User ${uniqueSuffix}`,
         avatarUrl: `https://api.dicebear.com/9.x/thumbs/svg?seed=${uniqueSuffix}`,
+        bio: `Hi! My name is User ${uniqueSuffix}. Welcome to my vrc-closet!`,
       }).returning();
 
       createdUserIds.push(user.id);

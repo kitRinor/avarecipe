@@ -28,17 +28,22 @@ async function main() {
     await db.delete(schema.compatibility);
     await db.delete(schema.items);
     await db.delete(schema.avatars);
+    await db.delete(schema.profiles);
     await db.delete(schema.users);
 
     // --- 1. Users ---
-    console.log('Creating Users...');
+    console.log('Creating Users and Profiles...');
     await db.insert(schema.users).values({
       id: TEMP_USER_ID, // 固定IDを指定
-      handle: 'vrclo', // @vrclo
       email: 'email@example.com',
       password: '$2b$10$rD3ceRnqEGJ/JN4oT.aED.maXdQLoCuhg2K75BzOzNLXipNJmqX/u', // hash for "password"
-      displayName: 'VRClo User',
-      avatarUrl: 'https://github.com/shadcn.png',
+    });
+    await db.insert(schema.profiles).values({
+      userId: TEMP_USER_ID,
+      handle: 'vrclo', // @vrclo,
+      displayName: 'VRClo',
+      avatarUrl: 'https://github.com/kitRinor.png', // tmp 
+      bio: 'This is a sample bio for VRClo. Welcome to my vrc-closet!',
     });
 
     // --- 2. Avatars ---
@@ -72,7 +77,7 @@ async function main() {
     const acc_sharkneck = insertedItems[4];
 
     // --- 4. Compatibility ---
-    console.log('Creating Compatibility Matrix...');
+    console.log('Creating Compatibilities...');
     await db.insert(schema.compatibility).values([
       { userId: TEMP_USER_ID, avatarId: chfn.id, itemId: cloth_prolg.id, status: 'official' },
       { userId: TEMP_USER_ID, avatarId: chfn.id, itemId: cloth_sameh.id, status: 'official' },

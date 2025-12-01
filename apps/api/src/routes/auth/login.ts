@@ -22,7 +22,10 @@ const login = new Hono<AppEnv>()
 
     // 1. Find user by email
     const user = await db.query.users.findFirst({ 
-      where: eq(users.email, email) 
+      where: eq(users.email, email),
+      with: {
+        profile: true,
+      },
     });
 
     if (!user) {
@@ -32,7 +35,6 @@ const login = new Hono<AppEnv>()
     // 2. Verify password
     // Note: Ensure 'user.password' matches your schema column name (might be passwordHash)
     const isValid = await verifyPassword(password, user.password);
-    
     if (!isValid) {
       return c.json({ error: 'Invalid credentials' }, 401);
     }
@@ -43,9 +45,9 @@ const login = new Hono<AppEnv>()
 
     const authUser: AuthUser = {
       id: user.id,
-      displayName: user.displayName,
-      handle: user.handle,
-      avatarUrl: user.avatarUrl,
+      displayName: user.profile.displayName,
+      handle: user.profile.handle,
+      avatarUrl: user.profile.avatarUrl,
     };
 
     return c.json(authUser, 200);

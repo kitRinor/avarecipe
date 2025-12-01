@@ -4,16 +4,21 @@ import { avatars } from './avatars';
 import { items } from './items';
 import { compatibility } from './compatibility';
 import { outfitItems, outfits } from './outfits';
+import { profiles } from './profiles';
 
 
 // テーブル間のリレーション設定
 
 // users table relations 
-export const usersRelations = relations(users, ({ many }) => ({
+export const usersRelations = relations(users, ({ one, many }) => ({
+  profile: one(profiles, { fields: [users.id], references: [profiles.userId] }), // 1-user : 1-profile
   avatars: many(avatars), // 1-user : n-avatars
   items: many(items), // 1-user : n-items
 }));
-
+// profiles table relations
+export const profilesRelations = relations(profiles, ({ one }) => ({
+  user: one(users, { fields: [profiles.userId], references: [users.id] }),
+}));
 // avatars table relations
 export const avatarsRelations = relations(avatars, ({ one, many }) => ({
   user: one(users, { fields: [avatars.userId], references: [users.id] }),

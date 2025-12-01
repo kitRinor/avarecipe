@@ -28,7 +28,9 @@ const list = new Hono<AppEnv>()
           ),
           with: {
             user: {
-              columns: { displayName: true, avatarUrl: true, handle: true },
+              with: {
+                profile: true
+              }
             },
             // Include avatar and items if needed in the future
             // avatar: {
@@ -52,9 +54,9 @@ const list = new Hono<AppEnv>()
               imageUrl: outfit.imageUrl,
               user: {
                 id: outfit.userId,
-                handle: outfit.user.handle,
-                displayName: outfit.user.displayName,
-                avatarUrl: outfit.user.avatarUrl,
+                handle: outfit.user.profile.handle,
+                displayName: outfit.user.profile.displayName,
+                avatarUrl: outfit.user.profile.avatarUrl,
               },
               // avatar: {
               //   name: outfit.avatar.name,

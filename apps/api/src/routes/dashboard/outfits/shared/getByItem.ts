@@ -77,8 +77,10 @@ const getSharedByItem = new Hono<AppEnv>()
           },
           with: {
             user: {
-              columns: {
-                displayName: true,
+              with: {
+                profile: {
+                  columns: { displayName: true },
+                },
               },
             },
           },
@@ -92,7 +94,7 @@ const getSharedByItem = new Hono<AppEnv>()
           name: outfit.name,
           description: outfit.description,
           userId: outfit.userId,
-          userDisplayName: outfit.user.displayName,
+          userDisplayName: outfit.user.profile.displayName,
           imageUrl: resolveS3Url(outfit.imageUrl),
         }));
 
