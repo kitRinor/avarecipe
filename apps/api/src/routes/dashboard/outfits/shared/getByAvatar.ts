@@ -31,17 +31,22 @@ const getSharedByAvatar = new Hono<AppEnv>()
     paramValidator,
     async (c) => {
       try {
+        const userId = c.get('userId')!;
         // Cast param validation result since c.req.valid typing can be complex in RPC
         const { id } = c.req.valid('param' as any);
 
         // 1. Get the target avatar's sourceId
         const targetAvatar = await db.query.avatars.findFirst({
-          where: eq(avatars.id, id),
+          where:and(eq(avatars.id, id), eq(avatars.userId, userId)),
           columns: { sourceKey: true },
         });
 
+        if (!targetAvatar) {
+          console.log('Avatar not found:', id);
+          return c.json({ error: 'not found' }, 404);
+        }
         // If the avatar has no sourceId (e.g. not a BOOTH avatar), we cannot find shared outfits by source
-        if (!targetAvatar || !targetAvatar.sourceKey) {
+        if (!targetAvatar.sourceKey) {
           console.log('Avatar not found or has no sourceKey:', id);
           return c.json([], 200);
         }

@@ -11,6 +11,7 @@ export interface ItemRes {
   id: string;
   userId: string;
   name: string;
+  sourceKey: string | null;
   category: "cloth" | "hair" | "accessory" | "texture" | "prop" | "gimmick" | "other";
   storeUrl: string | null;
   thumbnailUrl: string | null;

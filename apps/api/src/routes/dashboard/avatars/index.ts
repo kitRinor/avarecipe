@@ -10,8 +10,9 @@ import { requireAuth } from '@/middleware/auth';
 
 export interface AvatarRes {
   id: string;
-  name: string;
   userId: string;
+  name: string;
+  sourceKey: string | null;
   storeUrl: string | null;
   thumbnailUrl: string | null;
   createdAt: Date | null;

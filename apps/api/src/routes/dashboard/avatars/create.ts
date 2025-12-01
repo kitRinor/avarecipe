@@ -6,7 +6,7 @@ import { avatars } from '@/db/schema/avatars';
 import { Hono } from 'hono';
 import { AppEnv } from '@/type';
 import { AvatarRes } from '.';
-import { generateSourceKey } from '@/lib/sourceKeyUtil';
+import { genSrcKeyFromUrl } from '@/lib/sourceKeyUtil';
 import { and, eq } from 'drizzle-orm';
 
 const jsonValidator = zValidator('json', z.object({
@@ -25,7 +25,7 @@ const create = new Hono<AppEnv>()
         const body = c.req.valid('json');
 
         // Generate a unique source key and check for duplicates
-        const sourceKey = generateSourceKey(body.storeUrl);
+        const sourceKey = genSrcKeyFromUrl(body.storeUrl);
         if (sourceKey) {
           const existing = await db.select().from(avatars)
             .where(and(

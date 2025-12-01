@@ -6,6 +6,7 @@ import { baseQueryForGetList } from '@/lib/validator';
 import { generateCondition } from '@/lib/queryUtils/filter';
 import { generateSorting } from '@/lib/queryUtils/sort';
 import { outfits } from '@/db/schema/outfits';
+import { OutfitRes } from '.';
 
 
 const list = new Hono<AppEnv>()
@@ -26,7 +27,7 @@ const list = new Hono<AppEnv>()
         .limit(limit)
         .offset(offset);
 
-      return c.json(allAvatars, 200);
+      return c.json<OutfitRes[]>(allAvatars, 200);
     } catch (e) {
       console.error(e);
       return c.json({ error: 'Failed to fetch' }, 500);

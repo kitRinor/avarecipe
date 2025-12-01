@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { dashboardApi } from "@/lib/api";
 import { fetchStoreItemInfo, StoreItemInfo } from "@/lib/storeInfoUtils/fetchStoreItemInfo";
@@ -15,11 +15,11 @@ import { toast } from "sonner";
 
 interface AvatarAddDialogProps {
   open: boolean;
-  onOpenChange: (open: boolean) => void;
+  setOpen: (open: boolean) => void;
   onSuccess?: () => void;
 }
 
-export function AvatarAddDialog({ open, onOpenChange, onSuccess }: AvatarAddDialogProps) {
+export function AvatarAddDialog({ open, setOpen, onSuccess }: AvatarAddDialogProps) {
   const { t } = useTranslation();
   
   // States
@@ -114,7 +114,7 @@ export function AvatarAddDialog({ open, onOpenChange, onSuccess }: AvatarAddDial
   };
 
   const handleClose = () => {
-    onOpenChange(false);
+    setOpen(false);
     // Reset states after animation
     setTimeout(() => {
       setName("");
@@ -135,8 +135,8 @@ export function AvatarAddDialog({ open, onOpenChange, onSuccess }: AvatarAddDial
     <Dialog open={open} onOpenChange={(val) => !val && handleClose()}>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
-          <DialogTitle>{t('avatars.list.add_avatar')}</DialogTitle>
-          <DialogDescription>{t('avatars.list.add_avatar_description')}</DialogDescription>
+          <DialogTitle>{t('dashboard.avatars.list.add_avatar')}</DialogTitle>
+          <DialogDescription>{t('dashboard.avatars.list.add_avatar_description')}</DialogDescription>
         </DialogHeader>
 
         <div className="grid gap-6 py-4">
@@ -154,12 +154,12 @@ export function AvatarAddDialog({ open, onOpenChange, onSuccess }: AvatarAddDial
                  variant="secondary"
                  onClick={handleAutoFill}
                  disabled={!storeUrl || isScraping || isSubmitting}
-                 title={t('avatars.edit.auto_fill_tooltip')}
+                 title={t('dashboard.avatars.edit.auto_fill_tooltip')}
                >
                  {isScraping ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4 text-yellow-500" />}
                </Button>
              </div>
-             <p className="text-xs text-muted-foreground">{t('avatars.edit.store_url_help')}</p>
+             <p className="text-xs text-muted-foreground">{t('dashboard.avatars.edit.store_url_help')}</p>
            </div>
 
            {/* Name Input */}
@@ -176,7 +176,7 @@ export function AvatarAddDialog({ open, onOpenChange, onSuccess }: AvatarAddDial
                  size="icon"
                  onClick={handleApplyName}
                  disabled={isScraping || (!fetchedStoreInfo && !storeUrl)}
-                 title={t('avatars.edit.apply_name_tooltip')}
+                 title={t('dashboard.avatars.edit.apply_name_tooltip')}
                >
                  {isScraping ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
                </Button>

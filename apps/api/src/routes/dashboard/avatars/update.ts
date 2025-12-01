@@ -7,7 +7,7 @@ import { avatars } from '@/db/schema/avatars';
 import { AppEnv } from '@/type';
 import { Hono } from 'hono';
 import { AvatarRes } from '.';
-import { generateSourceKey } from '@/lib/sourceKeyUtil';
+import { genSrcKeyFromUrl } from '@/lib/sourceKeyUtil';
 
 const paramValidator = zValidator('param', z.object({
   id: z.uuid(),
@@ -31,7 +31,7 @@ const update = new Hono<AppEnv>()
         const body = c.req.valid('json');
 
         // Check for duplicate sourceKey if storeUrl is being updated
-        const sourceKey = body.storeUrl !== undefined ? generateSourceKey(body.storeUrl) : null;
+        const sourceKey = body.storeUrl !== undefined ? genSrcKeyFromUrl(body.storeUrl) : null;
         if (sourceKey) {
           const existing = await db.select().from(avatars)
             .where(and(

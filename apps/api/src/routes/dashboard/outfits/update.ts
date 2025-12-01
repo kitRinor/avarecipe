@@ -2,7 +2,7 @@ import { Hono } from 'hono';
 import { AppEnv } from '@/type';
 import { zValidator } from '@hono/zod-validator';
 import { z } from 'zod';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import { db } from '@/db';
 import { outfits } from '@/db/schema/outfits';
 
@@ -22,25 +22,26 @@ const update = new Hono<AppEnv>()
     jsonValidator,
     async (c) => {
       try {
+        const userId = c.get('userId')!;
         const { id } = c.req.valid('param');
-      const body = c.req.valid('json');
+        const body = c.req.valid('json');
 
-      const result = await db.update(outfits)
-        .set({
-          ...body
-        })
-        .where(eq(outfits.id, id))
-        .returning();
+        const result = await db.update(outfits)
+          .set({
+            ...body
+          })
+          .where(and(eq(outfits.id, id), eq(outfits.userId, userId)))
+          .returning();
 
-      if (result.length === 0) {
-        return c.json({ error: 'not found' }, 404);
+        if (result.length === 0) {
+          return c.json({ error: 'not found' }, 404);
+        }
+
+        return c.json(result[0], 200);
+      } catch (e) {
+        console.error(e);
+        return c.json({ error: 'Failed to update' }, 500);
       }
-
-      return c.json(result[0], 200);
-    } catch (e) {
-      console.error(e);
-      return c.json({ error: 'Failed to update' }, 500);
     }
-  }
-);
+  );
 export default update;

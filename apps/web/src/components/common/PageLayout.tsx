@@ -22,10 +22,10 @@ export function PageLayout({ children }: { children: ReactNode }) {
   }, [auth.user, auth.isLoading]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-50">
+    <div className="min-h-screen flex flex-col bg-vrclo1-50  text-vrclo1-900 ">
       
       {/* --- AppBar --- */}
-      <header className="border-b bg-white dark:bg-zinc-900 sticky top-0 z-50">
+      <header className="border-b bg-white  sticky top-0 z-50">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
 
           <Link to="/dashboard" className="flex items-center gap-2 font-bold text-xl hover:opacity-80 transition-opacity">
@@ -61,7 +61,7 @@ export function PageLayout({ children }: { children: ReactNode }) {
       </main>
 
       {/* Footer */}
-      <footer className="py-6 text-center text-zinc-500 text-sm border-t bg-zinc-50 dark:bg-zinc-950">
+      <footer className="py-6 text-center text-vrclo1-500 text-sm border-t bg-vrclo1-50 ">
         {t("app.footer")}
       </footer>
       

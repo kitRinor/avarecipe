@@ -6,16 +6,16 @@ help:   # show this list
 	@grep -E '^[[:alnum:]_/-]+ *:.*?#.*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?# "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 # ----
 
-.PHONY : run
-run:   # run the application
+.PHONY : up
+up:   # run the application
 	@echo "Running the application..."
 	@pnpm run dev
 	
-.PHONY : sb/start sb/stop sb/reset
-sb/start:   # start the local db,s3 (using Docker)
+.PHONY : sb/up sb/down sb/reset
+sb/up:   # start the local db,s3 (using Docker)
 	@echo "Starting the local supabase..."
 	@npx supabase start
-sb/stop:   # stop the local db,s3 (using Docker)
+sb/down:   # stop the local db,s3 (using Docker)
 	@echo "Stopping the local supabase..."
 	@npx supabase stop
 sb/reset:  # reset supabase-data and recreates S3 with empty bucket, and DB without any tables and seed data. 

@@ -7,7 +7,7 @@ import { and, eq, ne } from 'drizzle-orm';
 import { db } from '@/db';
 import { items } from '@/db/schema/items';
 import { ItemRes } from '.';
-import { generateSourceKey } from '@/lib/sourceKeyUtil';
+import { genSrcKeyFromUrl } from '@/lib/sourceKeyUtil';
 
 
 const paramValidator = zValidator('param', z.object({
@@ -32,7 +32,7 @@ const update = new Hono<AppEnv>()
         const body = c.req.valid('json');
 
         // Check for duplicate sourceKey if storeUrl is being updated
-        const sourceKey = body.storeUrl !== undefined ? generateSourceKey(body.storeUrl) : null;
+        const sourceKey = body.storeUrl !== undefined ? genSrcKeyFromUrl(body.storeUrl) : null;
         if (sourceKey) {
           const existing = await db.select().from(items)
             .where(and(

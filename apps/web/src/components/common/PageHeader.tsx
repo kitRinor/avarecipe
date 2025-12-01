@@ -19,7 +19,7 @@ export function PageHeader({
   const { t } = useTranslation();
   const navigate = useNavigate();
   return (
-    <div className="flex items-center justify-between mb-8">
+    <div className="flex items-center justify-between mb-8 text-vrclo1-700">
       <div className="flex items-center gap-4">
         {backBtn && (
           <Button 
@@ -28,11 +28,11 @@ export function PageHeader({
             size="icon"
           >
             <ArrowLeft className="h-5 w-5" />
-            <span className="sr-only">{t('core.action.back')}</span>
+            <span className="sr-only ">{t('core.action.back')}</span>
           </Button>
         )}
         <h1 className="text-2xl font-bold">{title}</h1>
-        <p className="text-zinc-500 text-sm">{description}</p>
+        <p className="text-vrclo1-500 text-sm">{description}</p>
       </div>
       {children}
     </div>

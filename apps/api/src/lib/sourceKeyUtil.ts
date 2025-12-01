@@ -2,7 +2,7 @@
  * Extracts a unique Source ID from a store URL.
  * Format: "service:id" (e.g., "booth:123456")
  */
-export const generateSourceKey = (urlStr: string | null): string | null => {
+export const genSrcKeyFromUrl = (urlStr: string | null): string | null => {
   try {
     if (!urlStr) return null;
     const url = new URL(urlStr);
@@ -62,3 +62,19 @@ export const generateSourceKey = (urlStr: string | null): string | null => {
     return null;
   }
 };
+
+export const genUrlFromSrcKey = (srcKey: string | null): string | null => {
+  try {
+    if (!srcKey) return null;
+    const [service, id] = srcKey.split(':');
+    if ( service == 'booth' ) {
+      return `https://booth.pm/ja/items/${id}`;
+    }
+    
+
+
+    return null;
+  } catch (e) {
+    return null;
+  }
+}

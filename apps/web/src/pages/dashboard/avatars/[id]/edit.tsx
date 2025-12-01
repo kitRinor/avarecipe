@@ -204,19 +204,19 @@ export default function EditAvatar() {
     <PageLayout>
       {/* ヘッダー */}
       <PageHeader
-        title={t("avatars.edit.page_title")} 
-        description={t("avatars.edit.page_description")}
+        title={t("dashboard.avatars.edit.page_title")} 
+        description={t("dashboard.avatars.edit.page_description")}
       />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* 左カラム: 画像プレビュー */}
         <div className="md:col-span-1">
-          <div className="aspect-square bg-zinc-100 dark:bg-zinc-800 relative overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700 flex items-center justify-center shadow-sm">
+          <div className="aspect-square bg-vrclo1-100  relative overflow-hidden rounded-lg border border-vrclo1-200  flex items-center justify-center shadow-sm">
             {thumbnailUrl ? (
               <img src={thumbnailUrl} alt="Preview" className="object-cover w-full h-full" />
             ) : (
-              <div className="text-zinc-300 flex flex-col items-center gap-2">
-                <span className="text-sm text-zinc-400 font-medium">No Image</span>
+              <div className="text-vrclo1-300 flex flex-col items-center gap-2">
+                <span className="text-sm text-vrclo1-400 font-medium">No Image</span>
               </div>
             )}
           </div>
@@ -226,7 +226,7 @@ export default function EditAvatar() {
         <div className="md:col-span-2">
           <Card>
             <CardHeader>
-              <CardTitle>{t('avatars.edit.page_title')}</CardTitle>
+              <CardTitle>{t('dashboard.avatars.edit.page_title')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               
@@ -245,7 +245,7 @@ export default function EditAvatar() {
                             href={storeUrl} 
                             target="_blank" 
                             rel="noreferrer"
-                            className="absolute right-2 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-blue-500"
+                            className="absolute right-2 top-1/2 -translate-y-1/2 text-vrclo1-400 hover:text-blue-500"
                         >
                             <ExternalLink className="h-4 w-4" />
                         </a>
@@ -256,8 +256,8 @@ export default function EditAvatar() {
                     size="icon"
                     onClick={handleAutoFill} 
                     disabled={!storeUrl || isScraping}
-                    title={t('avatars.edit.auto_fill_tooltip')}
-                    className="border border-zinc-300 hover:border-zinc-400 dark:border-zinc-700 dark:hover:border-zinc-500"
+                    title={t('dashboard.avatars.edit.auto_fill_tooltip')}
+                    className="border border-vrclo1-300 hover:border-vrclo1-400  "
                   >
                     {isScraping ? (
                         <Loader2 className="h-4 w-4 animate-spin" />
@@ -267,7 +267,7 @@ export default function EditAvatar() {
                   </Button>
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  {t('avatars.edit.store_url_help')}
+                  {t('dashboard.avatars.edit.store_url_help')}
                 </p>
               </div>
 
@@ -280,7 +280,7 @@ export default function EditAvatar() {
                     size="icon"
                     onClick={handleApplyName}
                     disabled={isScraping || (!fetchedStoreInfo && !storeUrl)}
-                    title={t('avatars.edit.apply_name_tooltip')}
+                    title={t('dashboard.avatars.edit.apply_name_tooltip')}
                   >
                     {isScraping ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
                   </Button>

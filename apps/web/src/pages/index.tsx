@@ -20,9 +20,9 @@ export default function LandingPage() {
   if (auth.isLoading) return null; 
 
   return (
-    <div className="min-h-screen flex flex-col bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-50">
+    <div className="min-h-screen flex flex-col bg-vrclo1-50  text-vrclo1-900 ">
       {/* ヘッダー */}
-      <header className="px-6 py-4 flex items-center justify-between border-b bg-white dark:bg-zinc-900">
+      <header className="px-6 py-4 flex items-center justify-between border-b bg-white ">
         <div className="flex items-center gap-2 font-bold text-xl">
           <Shirt className="h-6 w-6" />
           {t("app.title")}
@@ -38,7 +38,7 @@ export default function LandingPage() {
       <main className="flex-1 flex flex-col items-center justify-center text-center p-8 gap-8">
         <div className="max-w-2xl space-y-6">
           <h1 className="text-4xl font-bold">{t("index.welcome_message")}</h1>
-          <p className="text-lg text-zinc-600 dark:text-zinc-400 whitespace-pre-line">
+          <p className="text-lg text-vrclo1-600  whitespace-pre-line">
             {t("index.app_description")}
           </p>
           
@@ -56,7 +56,7 @@ export default function LandingPage() {
       </main>
 
       {/* フッター */}
-      <footer className="py-6 text-center text-zinc-500 text-sm border-t">
+      <footer className="py-6 text-center text-vrclo1-500 text-sm border-t">
         {t("app.footer")}
       </footer>
     </div>

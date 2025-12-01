@@ -116,8 +116,8 @@ export function ImageUploader({ onUploadSuccess, defaultUrl, category }: ImageUp
           "w-full h-32 rounded-lg border-2 border-dashed transition-colors cursor-pointer",
           "flex items-center justify-center p-2",
           isDragOver 
-            ? "border-blue-500 bg-blue-50 dark:bg-blue-950/30"
-            : "border-zinc-300 dark:border-zinc-700 hover:border-zinc-400 dark:hover:border-zinc-500",
+            ? "border-blue-500 bg-blue-50 "
+            : "border-vrclo1-300  hover:border-vrclo1-400 ",
           isUploading && "pointer-events-none opacity-70"
         )}
       >
@@ -125,7 +125,7 @@ export function ImageUploader({ onUploadSuccess, defaultUrl, category }: ImageUp
         <div className="flex items-center gap-4 w-full">
             <div 
                 className={cn(
-                    "w-20 h-20 rounded-lg bg-zinc-200 dark:bg-zinc-800 flex items-center justify-center relative overflow-hidden flex-shrink-0",
+                    "w-20 h-20 rounded-lg bg-vrclo1-200  flex items-center justify-center relative overflow-hidden flex-shrink-0",
                 )}
             >
                 {previewUrl ? (
@@ -142,7 +142,7 @@ export function ImageUploader({ onUploadSuccess, defaultUrl, category }: ImageUp
                     </Button>
                     </>
                 ) : (
-                    <Upload className="h-6 w-6 text-zinc-400" />
+                    <Upload className="h-6 w-6 text-vrclo1-400" />
                 )}
             </div>
 
@@ -157,7 +157,7 @@ export function ImageUploader({ onUploadSuccess, defaultUrl, category }: ImageUp
                 ) : (
                     <>
                         <p className="text-sm font-medium">ファイルをドラッグ＆ドロップ</p>
-                        <p className="text-xs text-zinc-500">またはクリックして選択</p>
+                        <p className="text-xs text-vrclo1-500">またはクリックして選択</p>
                     </>
                 )}
             </div>

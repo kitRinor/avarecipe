@@ -71,13 +71,13 @@ export default function AvatarsIndexPage() {
     <PageLayout>
       {/* ヘッダー */}
       <PageHeader 
-        title={t('avatars.list.page_title')} 
-        description={t('avatars.list.page_description')}
+        title={t('dashboard.avatars.list.page_title')} 
+        description={t('dashboard.avatars.list.page_description')}
       >
         <Button onClick={() => setIsDialogOpen(true)}><Plus className="h-4 w-4 mr-2" /> {t('core.action.add')}</Button>
         <AvatarAddDialog 
           open={isDialogOpen} 
-          onOpenChange={setIsDialogOpen} 
+          setOpen={setIsDialogOpen} 
           onSuccess={fetchData} 
         />
       </PageHeader>
@@ -87,7 +87,7 @@ export default function AvatarsIndexPage() {
         {avatars.map((avatar) => (
           <Link key={avatar.id} to={`${avatar.id}`}>
             <Card className="overflow-hidden hover:shadow-md transition-shadow cursor-pointer h-full">
-              <div className="aspect-square bg-zinc-100 dark:bg-zinc-800 relative overflow-hidden text-zinc-300">
+              <div className="aspect-square bg-vrclo1-100  relative overflow-hidden text-vrclo1-300">
                 {avatar.thumbnailUrl ? (
                   <img src={avatar.thumbnailUrl} alt={avatar.name} className="absolute inset-0 object-cover w-full h-full" />
                 ) : (

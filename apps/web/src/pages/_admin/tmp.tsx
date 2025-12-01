@@ -1,5 +1,6 @@
 import { PageHeader } from "@/components/common/PageHeader";
 import { PageLayout } from "@/components/common/PageLayout";
+import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
 
@@ -45,7 +46,7 @@ export default function TmpPage() {
           </button>
         </div>
         {output && (
-          <div className="mt-4 p-4 border bg-gray-100">
+          <div className="mt-4 p-4 border bg-gray-50 rounded">
             <h3 className="font-semibold mb-2">Output:</h3>
             <div>
               <img src={output.url} alt={output.prompt} className="w-full h-auto" />
@@ -54,6 +55,18 @@ export default function TmpPage() {
           </div>
         )}
 
+        
+
+        <Button variant="default" >primary</Button>
+        <Button variant="secondary" >secondary</Button>
+        <Button variant="destructive" >destructive</Button>
+        <Button variant="ghost" >ghost</Button>
+        <Button variant="outline" >outline</Button>
+        <Button variant="link" >link</Button>
+
+        <div className="h-10 w-10 bg-vrclo1"/>
+        <div className="h-10 w-10 bg-vrclo2"/>
+        <div className="h-10 w-10 bg-vrclo3"/>
       </div>
 
     </PageLayout>

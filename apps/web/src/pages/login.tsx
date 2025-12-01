@@ -54,11 +54,11 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-zinc-50 dark:bg-zinc-950 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-vrclo1-50  p-4">
       <Card className="w-full max-w-md shadow-lg">
         <CardHeader className="space-y-1 text-center">
           <div className="flex justify-center mb-2">
-            <div className="p-3 bg-zinc-900 rounded-full text-white">
+            <div className="p-3 bg-vrclo1-900 rounded-full text-white">
               <Shirt className="w-6 h-6" />
             </div>
           </div>
@@ -72,7 +72,7 @@ export default function LoginPage() {
           <CardContent className="space-y-4">
             {/* 💡 エラー表示エリア */}
             {error && (
-              <p className="text-sm text-red-500 bg-red-50 dark:bg-red-950/30 p-2 rounded text-center border border-red-200">
+              <p className="text-sm text-red-500 bg-red-50  p-2 rounded text-center border border-red-200">
                 {error}
               </p>
             )}

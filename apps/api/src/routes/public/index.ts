@@ -1,8 +1,9 @@
 import { AppEnv } from "@/type";
 import { Hono } from "hono/tiny";
 
+import publicOutfitRoutes from "./outfits/index.js";
 
 const app = new Hono<AppEnv>()
-  .get('/', (c) => c.text('Public Root'))
+  .route('/outfits', publicOutfitRoutes);
 
 export default app;

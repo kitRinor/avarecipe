@@ -15,11 +15,11 @@ import { toast } from "sonner";
 
 interface ItemAddDialogProps {
   open: boolean;
-  onOpenChange: (open: boolean) => void;
+  setOpen: (open: boolean) => void;
   onSuccess?: () => void;
 }
 
-export function ItemAddDialog({ open, onOpenChange, onSuccess }: ItemAddDialogProps) {
+export function ItemAddDialog({ open, setOpen, onSuccess }: ItemAddDialogProps) {
   const { t } = useTranslation();
   
   // States
@@ -114,7 +114,7 @@ export function ItemAddDialog({ open, onOpenChange, onSuccess }: ItemAddDialogPr
   };
 
   const handleClose = () => {
-    onOpenChange(false);
+    setOpen(false);
     // Reset states after animation
     setTimeout(() => {
       setName("");
@@ -135,8 +135,8 @@ export function ItemAddDialog({ open, onOpenChange, onSuccess }: ItemAddDialogPr
     <Dialog open={open} onOpenChange={(val) => !val && handleClose()}>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
-          <DialogTitle>{t('items.list.add_item')}</DialogTitle>
-          <DialogDescription>{t('items.list.add_item_description')}</DialogDescription>
+          <DialogTitle>{t('dashboard.items.list.add_item')}</DialogTitle>
+          <DialogDescription>{t('dashboard.items.list.add_item_description')}</DialogDescription>
         </DialogHeader>
 
         <div className="grid gap-6 py-4">
@@ -154,12 +154,12 @@ export function ItemAddDialog({ open, onOpenChange, onSuccess }: ItemAddDialogPr
                  variant="secondary"
                  onClick={handleAutoFill}
                  disabled={!storeUrl || isScraping || isSubmitting}
-                 title={t('items.edit.auto_fill_tooltip')}
+                 title={t('dashboard.items.edit.auto_fill_tooltip')}
                >
                  {isScraping ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4 text-yellow-500" />}
                </Button>
              </div>
-             <p className="text-xs text-muted-foreground">{t('items.edit.store_url_help')}</p>
+             <p className="text-xs text-muted-foreground">{t('dashboard.items.edit.store_url_help')}</p>
            </div>
 
            {/* Name Input */}
@@ -176,7 +176,7 @@ export function ItemAddDialog({ open, onOpenChange, onSuccess }: ItemAddDialogPr
                  size="icon"
                  onClick={handleApplyName}
                  disabled={isScraping || (!fetchedStoreInfo && !storeUrl)}
-                 title={t('items.edit.apply_name_tooltip')}
+                 title={t('dashboard.items.edit.apply_name_tooltip')}
                >
                  {isScraping ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
                </Button>

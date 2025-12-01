@@ -45,7 +45,7 @@ export function ImageCandidateList({
   return (
     <div className="space-y-2 pt-4 border-t mt-4">
       <Label className="text-xs text-muted-foreground">画像候補</Label>
-      <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-zinc-200 dark:scrollbar-thumb-zinc-700">
+      <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-vrclo1-200 ">
         
         {/* 1. 元画像 (DB保存値) */}
         {originalDbUrl && (
@@ -55,8 +55,8 @@ export function ImageCandidateList({
             className={cn(
               "relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-md border-2 transition-all",
               currentUrl === originalDbUrl
-                ? "border-blue-500 ring-2 ring-blue-200 dark:ring-blue-900"
-                : "border-transparent hover:border-zinc-300"
+                ? "border-blue-500 ring-2 ring-blue-200 "
+                : "border-transparent hover:border-vrclo1-300"
             )}
             title="元の画像"
           >
@@ -80,8 +80,8 @@ export function ImageCandidateList({
             className={cn(
               "relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-md border-2 transition-all",
               currentUrl === img.original
-                ? "border-blue-500 ring-2 ring-blue-200 dark:ring-blue-900"
-                : "border-transparent hover:border-zinc-300"
+                ? "border-blue-500 ring-2 ring-blue-200 "
+                : "border-transparent hover:border-vrclo1-300"
             )}
           >
             <img
@@ -99,8 +99,8 @@ export function ImageCandidateList({
           className={cn(
             "h-16 w-16 flex-shrink-0 flex flex-col items-center justify-center rounded-md border-2 border-dashed transition-all",
             !currentUrl
-              ? "border-red-400 bg-red-50 dark:bg-red-950/20 text-red-500"
-              : "border-zinc-200 hover:border-zinc-300 hover:bg-zinc-50 dark:border-zinc-700 dark:hover:bg-zinc-800"
+              ? "border-red-400 bg-red-50  text-red-500"
+              : "border-vrclo1-200 hover:border-vrclo1-300 hover:bg-vrclo1-50  "
           )}
           title="画像を削除"
         >
@@ -114,8 +114,8 @@ export function ImageCandidateList({
           onClick={() => fileInputRef.current?.click()}
           disabled={isUploading}
           className={cn(
-            "h-16 w-16 flex-shrink-0 flex flex-col items-center justify-center rounded-md border-2 border-dashed transition-all bg-zinc-50 dark:bg-zinc-900",
-            "border-zinc-300 hover:border-zinc-400 dark:border-zinc-700 dark:hover:border-zinc-600 text-zinc-500"
+            "h-16 w-16 flex-shrink-0 flex flex-col items-center justify-center rounded-md border-2 border-dashed transition-all bg-vrclo1-50 ",
+            "border-vrclo1-300 hover:border-vrclo1-400   text-vrclo1-500"
           )}
           title="画像をアップロード"
         >
@@ -144,7 +144,7 @@ export function ImageCandidateList({
             disabled={isFetching}
             className={cn(
               "h-16 w-16 flex-shrink-0 flex flex-col items-center justify-center rounded-md border-2 border-dashed transition-all",
-              "border-blue-200 hover:border-blue-300 hover:bg-blue-50 dark:border-blue-900 dark:hover:bg-blue-900/20 text-blue-500"
+              "border-blue-200 hover:border-blue-300 hover:bg-blue-50   text-blue-500"
             )}
             title="BOOTHから画像を取得"
           >

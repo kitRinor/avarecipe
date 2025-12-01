@@ -66,20 +66,20 @@ export default function AvatarDetailPage() {
     <PageLayout>
       {/* ヘッダー */}
       <PageHeader
-        title={t("avatars.detail.page_title")} 
-        description={t("avatars.detail.page_description")}
+        title={t("dashboard.avatars.detail.page_title")} 
+        description={t("dashboard.avatars.detail.page_description")}
       />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* 左カラム: 画像表示 */}
         <div className="md:col-span-1">
-          <div className="aspect-square bg-zinc-100 dark:bg-zinc-800 relative overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-700 flex items-center justify-center shadow-sm">
+          <div className="aspect-square bg-vrclo1-100  relative overflow-hidden rounded-lg border border-vrclo1-200  flex items-center justify-center shadow-sm">
             {avatar.thumbnailUrl ? (
               <img src={avatar.thumbnailUrl} alt={avatar.name} className="object-cover w-full h-full" />
             ) : (
-              <div className="text-zinc-300 flex flex-col items-center gap-2">
+              <div className="text-vrclo1-300 flex flex-col items-center gap-2">
                 <ImageIcon className="h-16 w-16" />
-                <span className="text-sm text-zinc-400 font-medium">No Image</span>
+                <span className="text-sm text-vrclo1-400 font-medium">No Image</span>
               </div>
             )}
           </div>
@@ -91,7 +91,7 @@ export default function AvatarDetailPage() {
             <CardHeader>
               <CardTitle className="flex items-center justify-between">
                 <span>{avatar.name}</span>
-                <Button onClick={() => navigate(`/avatars/${avatar.id}/edit`)} variant="ghost" size="icon">
+                <Button onClick={() => navigate(`edit`)} variant="ghost" size="icon">
                   <Pencil className="h-4 w-4" />
                 </Button>
               </CardTitle>
@@ -99,7 +99,7 @@ export default function AvatarDetailPage() {
             <CardContent className="space-y-4">
 
               <div>
-                <h2 className="text-sm font-medium text-zinc-500 dark:text-zinc-400">{t("core.data.avatar.store_url")}</h2>
+                <h2 className="text-sm font-medium text-vrclo1-500 ">{t("core.data.avatar.store_url")}</h2>
                 {avatar.storeUrl ? (
                   <a 
                     href={avatar.storeUrl} 
@@ -111,18 +111,18 @@ export default function AvatarDetailPage() {
                     {avatar.storeUrl}
                   </a>
                 ) : (
-                  <p className="text-sm text-zinc-400 mt-1">{t("core.message.no_data")}</p>
+                  <p className="text-sm text-vrclo1-400 mt-1">{t("core.message.no_data")}</p>
                 )}
               </div>
             </CardContent>
           </Card>
 
           {/* 将来的な機能のプレースホルダー */}
-          <Card className="bg-zinc-50 dark:bg-zinc-900/50 border-dashed">
+          <Card className="border-dashed">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-zinc-500">
+              <CardTitle className="flex items-center gap-2 text-vrclo1-500">
                 <Layers className="h-5 w-5" />
-                {t("avatars.detail.used_in_coordinations")}
+                {t("dashboard.avatars.detail.used_in_coordinations")}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -131,25 +131,25 @@ export default function AvatarDetailPage() {
                   {sharedOutfits.map((outfit) => (
                     <div 
                       key={outfit.id} 
-                      className="group bg-white dark:bg-zinc-900 rounded-lg border p-3 hover:shadow-md transition-shadow cursor-pointer"
+                      className="group bg-white  rounded-lg border p-3 hover:shadow-md transition-shadow cursor-pointer"
                       // onClick={() => navigate(`/outfits/${outfit.id}`)} // 将来的に詳細ページへ
                     >
                       {/* サムネイル */}
-                      <div className="aspect-video bg-zinc-100 dark:bg-zinc-800 rounded-md overflow-hidden mb-3 flex items-center justify-center relative">
+                      <div className="aspect-video bg-vrclo1-100  rounded-md overflow-hidden mb-3 flex items-center justify-center relative">
                         {outfit.imageUrl ? (
                           <img src={outfit.imageUrl} alt={outfit.name} className="w-full h-full object-cover" />
                         ) : (
-                          <UserIcon className="h-8 w-8 text-zinc-300" />
+                          <UserIcon className="h-8 w-8 text-vrclo1-300" />
                         )}
                       </div>
                       
                       {/* 情報 */}
                       <div>
                         <h3 className="font-bold text-sm truncate">{outfit.name}</h3>
-                        <p className="text-xs text-zinc-500 dark:text-zinc-400 line-clamp-1 mt-0.5">
+                        <p className="text-xs text-vrclo1-500  line-clamp-1 mt-0.5">
                           {outfit.userDisplayName}
                         </p>
-                        <p className="text-xs text-zinc-500 dark:text-zinc-400 line-clamp-1 mt-0.5">
+                        <p className="text-xs text-vrclo1-500  line-clamp-1 mt-0.5">
                           {outfit.description}
                         </p>
                       </div>
@@ -157,8 +157,8 @@ export default function AvatarDetailPage() {
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-8 text-zinc-400 text-sm">
-                  <p>{t("items.detail.no_used_in_coordinations")}</p>
+                <div className="text-center py-8 text-vrclo1-400 text-sm">
+                  <p>{t("dashboard.items.detail.no_used_in_coordinations")}</p>
                   <p className="text-xs mt-2 opacity-70">※ ストアURLが設定されているアイテムのみ検索対象になります</p>
                 </div>
               )}

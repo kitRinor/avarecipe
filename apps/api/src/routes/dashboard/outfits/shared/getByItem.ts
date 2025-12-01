@@ -31,17 +31,22 @@ const getSharedByItem = new Hono<AppEnv>()
     paramValidator,
     async (c) => {
       try {
+        const userId = c.get('userId')!;
         // Cast param validation result since c.req.valid typing can be complex in RPC
         const { id } = c.req.valid('param' as any);
 
         // 1. Get the target item's sourceId
         const targetItem = await db.query.items.findFirst({
-          where: eq(items.id, id),
+          where: and(eq(items.id, id), eq(items.userId, userId)),
           columns: { sourceKey: true },
         });
+        if (!targetItem) {
+          console.log('Item not found:', id);
+          return c.json({ error: 'not found' }, 404);
+        }
 
         // If the item has no sourceId (e.g. not a BOOTH item), we cannot find shared outfits by source
-        if (!targetItem || !targetItem.sourceKey) {
+        if (!targetItem.sourceKey) {
           console.log('Item not found or has no sourceKey:', id);
           return c.json([], 200);
         }

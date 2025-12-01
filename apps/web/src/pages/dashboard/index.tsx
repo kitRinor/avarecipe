@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, memo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { dashboardApi } from "@/lib/api";
 import { useAuth } from "@/contexts/AuthContext";
@@ -60,34 +60,37 @@ export default function HomePage() {
         {/* --- クイックアクセス --- */}
         <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Link to="matrix">
-            <Card className="hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors cursor-pointer h-full border-2 border-transparent hover:border-zinc-200 dark:hover:border-zinc-800">
+            <Card className="hover:bg-vrclo1-50  transition-colors cursor-pointer h-full border-2 border-transparent hover:border-vrclo1-200 ">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-lg font-bold">{t("home.matrix")}</CardTitle>
-                <Grid3X3Icon className="h-5 w-5 text-zinc-500" />
+                <CardTitle className="text-lg font-bold text-vrclo1-700">{t("dashboard.my_matrix")}</CardTitle>
+                <Grid3X3Icon className="h-5 w-5 text-vrclo1-500" />
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-zinc-500">
-                  {t("home.matrix_description")}
+                <p className="text-sm text-vrclo1-500">
+                  {t("dashboard.matrix_description")}
                 </p>
               </CardContent>
             </Card>
           </Link>
 
-          <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 border-blue-100 dark:border-blue-900">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-lg font-bold text-blue-700 dark:text-blue-300">{t("home.community_outfit")}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-blue-600/80 dark:text-blue-400/80">
-                {t("home.community_outfit_description")}
-              </p>
-            </CardContent>
-          </Card>
+          {/* public outfits */}
+          <Link to="/outfits"> 
+            <Card className="bg-blue-50 hover:bg-blue-100  transition-colors cursor-pointer h-full border-2 border-transparent hover:border-blue-200 ">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-lg font-bold text-blue-700 ">{t("dashboard.community_outfit")}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-blue-600/80 ">
+                  {t("dashboard.community_outfit_description")}
+                </p>
+              </CardContent>
+            </Card>
+          </Link>
         </section>
 
         {/* --- 所持アバター --- */}
         <section>
-          <MyAssetList<Avatar>
+          <MyAssetList
             t_mode="avatar"
             data={avatars}
             isDialogOpen={openNewAvatar}
@@ -99,7 +102,7 @@ export default function HomePage() {
         </section>
         {/* --- 所持アイテム --- */}
         <section>
-          <MyAssetList<Item>
+          <MyAssetList
             t_mode="item"
             data={items}
             isDialogOpen={openNewItem}
@@ -131,21 +134,23 @@ const MyAssetList = <T extends Avatar | Item>(props:{
 
   const Icon = props.t_mode === 'item' ? ShirtIcon : UserIcon;
   const trans = {
-    title: props.t_mode === 'item' ? t("home.my_items") : t("home.my_avatars"),
-    addDialogTitle: props.t_mode === 'item' ? t("home.add_item_dialog_title") : t("home.add_avatar_dialog_title"),
-    addDialogDescription: props.t_mode === 'item' ? t("home.add_item_dialog_description") : t("home.add_avatar_dialog_description"),
-    emptyMessage: props.t_mode === 'item' ? t("home.my_items_empty") : t("home.my_avatars_empty"),
+    title: props.t_mode === 'item' ? t("dashboard.my_items") : t("dashboard.my_avatars"),
+    addDialogTitle: props.t_mode === 'item' ? t("dashboard.add_item_dialog_title") : t("dashboard.add_avatar_dialog_title"),
+    addDialogDescription: props.t_mode === 'item' ? t("dashboard.add_item_dialog_description") : t("dashboard.add_avatar_dialog_description"),
+    emptyMessage: props.t_mode === 'item' ? t("dashboard.my_items_empty") : t("dashboard.my_avatars_empty"),
 
     nameField: props.t_mode === 'item' ? t("core.data.item.name") : t("core.data.avatar.name"),
     storeUrlField: props.t_mode === 'item' ? t("core.data.item.store_url") : t("core.data.avatar.store_url"),
     thumbnailUrlField: props.t_mode === 'item' ? t("core.data.item.thumbnail_url") : t("core.data.avatar.thumbnail_url"),
   }
-  const DialogComponent = props.t_mode === 'item' ? ItemAddDialog : AvatarAddDialog;
+  const DialogComponent = useMemo(() => 
+    props.t_mode === 'item' ? ItemAddDialog : AvatarAddDialog,
+  [props.t_mode]);
 
   return (
-    <Card className="hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors h-full border-2 border-transparent hover:border-zinc-200 dark:hover:border-zinc-800">
+    <Card className="hover:bg-vrclo1-50  transition-colors h-full border-2 border-transparent hover:border-vrclo1-200 ">
       <CardHeader className="pb-2 flex flex-row justify-between">
-        <CardTitle onClick={props.onClickTitle} className="text-lg font-bold flex items-center gap-2 cursor-pointer">
+        <CardTitle onClick={props.onClickTitle} className="text-lg text-vrclo1-700 font-bold flex items-center gap-2 cursor-pointer">
           <Icon className="h-5 w-5" /> 
           {trans.title}
         </CardTitle>
@@ -153,7 +158,7 @@ const MyAssetList = <T extends Avatar | Item>(props:{
         <Button onClick={() => props.setIsDialogOpen(true)}><PlusIcon className="h-4 w-4 mr-2" /> {t('core.action.add')}</Button>
         <DialogComponent
           open={props.isDialogOpen} 
-          onOpenChange={props.setIsDialogOpen} 
+          setOpen={props.setIsDialogOpen} 
           onSuccess={props.onSuccess} 
         />
 
@@ -164,10 +169,9 @@ const MyAssetList = <T extends Avatar | Item>(props:{
         {props.data.slice(0, maxVisible).map((item) => (
           <Card 
             key={item.id} onClick={() => props.onClickItem(item)} 
-            className="min-w-[33%] w-[33%] md:min-w-[25%] md:w-[25%] lg:min-w-[20%] lg:w-[20%] hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors h-full border-2 border-transparent hover:border-zinc-200 dark:hover:border-zinc-800 overflow-hidden transition-colors cursor-pointer"
-            // className="w-1/5 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors h-full border-2 border-transparent hover:border-zinc-200 dark:hover:border-zinc-800 overflow-hidden transition-colors cursor-pointer"
+            className="min-w-[33%] w-[33%] md:min-w-[25%] md:w-[25%] lg:min-w-[20%] lg:w-[20%] hover:bg-vrclo1-50  transition-colors h-full border-2 border-transparent hover:border-vrclo1-200  overflow-hidden cursor-pointer"
           >
-            <div className="aspect-square bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-zinc-300">
+            <div className="aspect-square bg-vrclo1-100  flex items-center justify-center text-vrclo1-300">
               {item.thumbnailUrl ? (
                 <img src={item.thumbnailUrl} alt={item.name} className="object-cover w-full h-full" />
               ) : (
@@ -177,20 +181,20 @@ const MyAssetList = <T extends Avatar | Item>(props:{
               )}
             </div>
             <CardFooter className="p-3 flex flex-col items-start">
-              <span className="font-bold truncate w-full">{item.name}</span>
+              <span className="font-bold truncate w-full text-vrclo1-700">{item.name}</span>
             </CardFooter>
           </Card>
         ))}
         
         {props.data.length === 0 && (
-          <div className="col-span-full text-center py-10 text-zinc-500 bg-zinc-50 rounded-lg border border-dashed">
+          <div className="col-span-full text-center py-10 text-vrclo1-500 bg-vrclo1-50 rounded-lg border border-dashed">
             {trans.emptyMessage}
           </div>
         )}
         {props.data.length > maxVisible && (
           <Card 
             key="more"
-            className="min-w-[10%] w-[10%] md:min-w-[8%] md:w-[8%] lg:min-w-[6%] lg:w-[6%] overflow-hidden bg-transparent border-transparent shadow-none text-zinc-400 transition-colors"
+            className="min-w-[10%] w-[10%] md:min-w-[8%] md:w-[8%] lg:min-w-[6%] lg:w-[6%] overflow-hidden bg-transparent border-transparent shadow-none text-vrclo1-400 transition-colors"
           >
             <div className="aspect-[1/4] flex items-center justify-center">
               <div className="w-full h-full flex items-center justify-center">
