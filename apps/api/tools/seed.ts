@@ -42,10 +42,10 @@ async function main() {
     });
     await db.insert(schema.profiles).values({
       userId: TEMP_USER_ID,
-      handle: 'vrclo', // @vrclo,
-      displayName: 'VRClo',
+      handle: 'admin', // @admin,
+      displayName: 'Admin',
       avatarUrl: 'https://github.com/kitRinor.png', // tmp 
-      bio: 'This is a sample bio for VRClo. Welcome to my vrc-closet!',
+      bio: 'This is a admin for AvaRecipe. Welcome to our Service!',
     });
 
     // --- 2. Assets ---

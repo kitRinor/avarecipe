@@ -29,8 +29,9 @@ export function PageLayout({ children }: { children: ReactNode }) {
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
 
           <Link to="/dashboard" className="flex items-center gap-2 font-bold text-xl hover:opacity-80 transition-opacity">
-            <Shirt className="h-6 w-6" /> {t("app.title")}
-          </Link>
+            <img src="/logo.svg" alt="VRClo Logo" className="h-10 w-10" />
+            <span>{t("app.title")}</span>
+          </Link> 
 
           {/* User Menu */}
           {auth.user && (

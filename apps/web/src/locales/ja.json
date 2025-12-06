@@ -1,9 +1,9 @@
 {
   "app": {
     "."  : "アプリ全体に関する文言",
-    "title": "VRClo",
-    "description": "アバターと衣装の対応関係を可視化しよう",
-    "footer": "© 2025 VRClo. Built for VRChat Users."
+    "title": "AvaRecipe",
+    "description": "アバター改変レシピをいつでも思い出そう",
+    "footer": "© 2025 AvaRecipe. All rights reserved."
   },
   "core": {
     "." : "共通で使われる文言",
