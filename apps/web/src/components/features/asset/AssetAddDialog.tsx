@@ -53,6 +53,7 @@ export function AssetAddDialog({ open, setOpen, onSuccess }:  AssetAddDialogProp
       if (info) {
         setFetchedStoreInfo(info);
         setName(info.name);
+        setCategory(info.category);
         if (info.imageUrls.length > 0) {
           setImageUrl(info.imageUrls[0].original);
           setCandidateImages(info.imageUrls);
