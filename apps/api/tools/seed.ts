@@ -44,7 +44,8 @@ async function main() {
       userId: TEMP_USER_ID,
       handle: 'admin', // @admin,
       displayName: 'Admin',
-      avatarUrl: 'https://github.com/kitRinor.png', // tmp 
+      avatarUrl: 'https://raw.githubusercontent.com/kitRinor/vrc-closet/refs/heads/main/apps/web/public/logo.svg',
+      // avatarUrl: 'https://github.com/kitRinor.png', 
       bio: 'This is a admin for AvaRecipe. Welcome to our Service!',
     });
 
