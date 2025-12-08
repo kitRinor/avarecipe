@@ -44,7 +44,7 @@ export default function RecipeDetailPage() {
 
   return (
     <PageLayout>
-      <div className="max-w-4xl mx-auto pb-20">
+      <div className="max-w-5xl mx-auto pb-20">
         
         {/* --- 1. Header Section --- */}
         <header className="mb-8 space-y-4">
@@ -100,10 +100,10 @@ export default function RecipeDetailPage() {
           </p>
         </header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
           
           {/* --- Left Column: Main Content (Steps) --- */}
-          <div className="lg:col-span-2 space-y-10">
+          <div className="md:col-span-2 space-y-10">
             
             {/* 3. Steps Section */}
             <section>
@@ -126,12 +126,12 @@ export default function RecipeDetailPage() {
                       <h3 className="text-xl font-bold text-foreground">
                         {step.name}
                       </h3>
-                      <p className="text-muted-foreground leading-relaxed">
+                      <p className="text-muted-foreground whitespace-pre-wrap leading-relaxed">
                         {step.description}
                       </p>
                       {step.imageUrl && (
-                        <div className="rounded-lg overflow-hidden border border-border shadow-sm mt-3">
-                          <img src={step.imageUrl} alt={step.name} className="w-full h-auto" />
+                        <div className="rounded-lg overflow-hidden shadow-sm mt-3">
+                          <img src={step.imageUrl} alt={step.name} className=" max-h-[200px] object-cover" />
                         </div>
                       )}
                     </div>
@@ -149,7 +149,8 @@ export default function RecipeDetailPage() {
               <Card>
                 <CardHeader className="pb-3">
                   <CardTitle className="text-sm font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
-                    <UserIcon className="h-4 w-4" /> Base Asset
+                    <UserIcon className="h-4 w-4" />
+                    {t('core.data.recipe.base_asset')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -176,60 +177,45 @@ export default function RecipeDetailPage() {
             )}
 
             {/* 2. Ingredients (Items) & 4. Configuration */}
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
-                  <ShoppingBag className="h-4 w-4" /> Items & Configs
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                {recipe?.assets.map((asset) => (
-                  <div key={asset.id} className="group">
-                    <div className="flex gap-3 mb-3">
-                      {asset.asset?.imageUrl && (
-                        <div className="h-10 w-10 rounded-md overflow-hidden border border-border bg-muted flex-shrink-0">
-                          <img src={asset.asset?.imageUrl} className="w-full h-full object-cover" />
-                        </div>
-                      )}
-                      <div className="min-w-0 flex-1">
-                        <p className="text-sm font-medium truncate">{asset.asset?.name}</p>
+            {recipe?.assets.map((asset) => (
+              <Card key={asset.id} className="overflow-hidden">
+                <div className="flex flex-col">
+                  {/* Asset Info */}
+                  <div className="p-3 flex items-center gap-3 bg-muted/30 border-b border-border">
+                      <div className="h-10 w-10 rounded bg-muted overflow-hidden flex-shrink-0 border border-border">
+                        <img src={asset.asset?.imageUrl || undefined} className="w-full h-full object-cover" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="font-medium truncate text-sm">{asset.asset?.name}</p>
                         <p className="text-xs text-muted-foreground capitalize">{asset.asset?.category}</p>
                       </div>
-                    </div>
+                  </div>
 
-                    {/* Configuration Box */}
-                    <div className="bg-muted/50 rounded-md p-3 text-xs font-mono space-y-2 border border-border/50">
-                      <div className="flex items-center justify-between text-muted-foreground mb-1">
-                        <span className="flex items-center gap-1">
-                          <Settings2 className="h-3 w-3" /> Config
-                        </span>
+                  {/* Config & Note */}
+                  <div className="p-3 flex-1 text-xs space-y-2">
+                    {asset.note && (
+                      <div className="text-muted-foreground border-l-2 border-primary/20 pl-2 mb-2">
+                        {asset.note}
+                      </div>
+                    )}
+                    
+                    {asset.configuration && Object.keys(asset.configuration).length > 0 && (
+                      <div className="bg-muted/50 rounded p-2 font-mono flex items-start justify-between group">
+                        <pre className="overflow-x-auto whitespace-pre-wrap break-all max-h-[100px]">
+                          {JSON.stringify(asset.configuration, null, 2)}
+                        </pre>
                         <button 
                           onClick={() => handleCopyConfig(asset.configuration)}
-                          className="hover:text-foreground transition-colors"
-                          title="Copy JSON"
+                          className="text-muted-foreground hover:text-foreground opacity-0 group-hover:opacity-100 transition-opacity"
                         >
                           <Copy className="h-3 w-3" />
                         </button>
                       </div>
-                      
-                      {/* Key-Value Display */}
-                      {asset.configuration && (
-                        <div className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1">
-                          {Object.entries(asset.configuration).map(([key, val]) => (
-                            <div key={key} className="contents">
-                              <span className="text-muted-foreground text-right opacity-70">{key}:</span>
-                              <span className="truncate font-medium">
-                                {typeof val === 'object' ? JSON.stringify(val) : String(val)}
-                              </span>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
+                    )}
                   </div>
-                ))}
-              </CardContent>
-            </Card>
+                </div>
+              </Card>
+            ))}
 
           </div>
         </div>
