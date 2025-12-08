@@ -4,7 +4,7 @@ import { zValidator } from '@hono/zod-validator';
 import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { v4 as uuidv4 } from 'uuid';
-import { s3Client, S3_BUCKET_NAME, S3_PUBLIC_URL, resolveS3Url } from '../../lib/s3';
+import { s3Client, S3_BUCKET_NAME, S3_PUBLIC_URL, resolvePathToUrl } from '../../lib/s3';
 import { requireAuth } from '../../middleware/auth';
 
 /**
@@ -56,12 +56,12 @@ const app = new Hono()
       console.log('presigned URL generated', {
         uploadUrl,
         filePath: key, 
-        publicUrl: resolveS3Url(key),
+        publicUrl: resolvePathToUrl(key),
       });
       return c.json({
         uploadUrl,
         filePath: key, 
-        publicUrl: resolveS3Url(key),
+        publicUrl: resolvePathToUrl(key),
       });
 
     } catch (e) {

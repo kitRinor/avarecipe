@@ -28,8 +28,9 @@ export const s3Client = new S3Client({
   },
 });
 
-// resolveS3Url: Given a path, return the full S3 public URL
-export const resolveS3Url = (path: string | null): string | null => {
+// resolvePathToUrl: Given a path, return the full S3 public URL
+// on DB -> Front, (also maybe used in response for create,update)
+export const resolvePathToUrl = (path: string | undefined | null): string | null => {
   if (!path) return null;
 
   if (/^(https?:)?\/\//.test(path)) {
@@ -41,3 +42,15 @@ export const resolveS3Url = (path: string | null): string | null => {
   
   return `${baseUrl}/${cleanPath}`;
 };
+
+// dissolveUrltoPath: Given a full S3 public URL, return the path within the bucket
+// on Front => DB
+export const dissolveUrltoPath = (url: string | undefined | null): string | null => {
+  if (!url) return null;
+
+  const baseUrl = S3_PUBLIC_URL.replace(/\/$/, '');
+  if (url.startsWith(baseUrl)) {
+    return url.slice(baseUrl.length + 1); // +1 to remove the trailing slash
+  }
+  return url;
+}

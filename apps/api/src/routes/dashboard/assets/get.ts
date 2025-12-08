@@ -7,6 +7,7 @@ import { db } from '@/db';
 import { and, eq } from 'drizzle-orm';
 import { assets } from '@/db/schema/assets';
 import { AssetRes } from '.';
+import { resolvePathToUrl } from '@/lib/s3';
 
 
 const paramValidator = zValidator('param', z.object({
@@ -30,7 +31,10 @@ const get = new Hono<AppEnv>()
         return c.json({ error: 'not found' }, 404);
       }
 
-      return c.json<AssetRes>(item[0], 200);
+      return c.json<AssetRes>({
+        ...item[0],
+        imageUrl: resolvePathToUrl(item[0].imageUrl),
+      }, 200);
     } catch (e) {
       console.error(e);
       return c.json({ error: 'Failed to fetch' }, 500);

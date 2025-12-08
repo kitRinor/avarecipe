@@ -7,6 +7,7 @@ import { Context, Hono } from 'hono';
 import { AppEnv } from '@/type';
 import { createMiddleware } from 'hono/factory';
 import { profiles } from '@/db/schema/profiles';
+import { resolvePathToUrl } from '@/lib/s3';
 
 const me = new Hono<AppEnv>()
 .use(requireAuth)
@@ -27,7 +28,7 @@ const me = new Hono<AppEnv>()
       id: profile.userId,
       displayName: profile.displayName,
       handle: profile.handle,
-      avatarUrl: profile.avatarUrl,
+      avatarUrl: resolvePathToUrl(profile.avatarUrl),
     };
 
     return c.json(authUser, 200);

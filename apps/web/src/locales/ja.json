@@ -146,10 +146,8 @@
       },
       "detail": {
         "page_title": "アイテム詳細",
-        "page_description": "アイテムの詳細情報と関連コーデ一覧",
-        "store_link": "ストアで見る",
-        "used_in_coordinations": "このアイテムを含むコーデ",
-        "no_used_in_coordinations": "このアイテムを使用した公開されたコーデはまだありません。"
+        "page_description": "アイテム詳細&関連コーデ",
+        "store_link": "ストアで見る"
       },
       "edit": {
         "page_title": "アイテム編集",
@@ -173,6 +171,17 @@
         "add_recipe": "レシピを追加",
         "no_recipes": "まだレシピがありません。新しいレシピを追加しましょう！"
       },
+      "detail": {
+        "page_title": "レシピ詳細",
+        "page_description": "レシピ詳細&関連アセット",
+        "base_asset": "ベースアセット",
+        "store_link": "ストアで見る",
+        "no_description": "説明はありません。",
+        "steps": "ステップ",
+        "assets": "アセット",
+        "no_steps": "まだ手順が追加されていません。",
+        "no_assets": "まだアセットが追加されていません。"
+      },
       "create": {
         "page_title": "レシピの新規作成",
         "page_description": "新しい改変レシピを作成します",
@@ -184,8 +193,10 @@
         "page_title": "レシピ編集",
         "page_description": "レシピの情報を編集します",
         "basic_info": "基本情報",
+        "basic_info_name": "レシピ名",
+        "basic_info_description": "説明・メモ",
         "ingredients": "アセット一覧",
-        "steps": "改変手順",
+        "steps": "ステップ",
         "add_step": "手順を追加",
         "add_ingredient": "アイテムを追加",
         "step_title": "タイトル",

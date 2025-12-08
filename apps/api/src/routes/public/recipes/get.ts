@@ -9,6 +9,7 @@ import { PubRecipeRes } from '.';
 import { recipeAssets, recipes, recipeSteps } from '@/db/schema/recipes';
 import { profiles } from '@/db/schema/profiles';
 import { assets } from '@/db/schema/assets';
+import { resolvePathToUrl } from '@/lib/s3';
 
 
 
@@ -52,9 +53,14 @@ const get = new Hono<AppEnv>()
           id: profile.userId,
           handle: profile.handle,
           displayName: profile.displayName,
-          avatarUrl: profile.avatarUrl,
+          avatarUrl: resolvePathToUrl(profile.avatarUrl),
         },
-        baseAsset: baseAsset,
+        baseAsset: baseAsset ? {
+          name: baseAsset.name,
+          storeUrl: baseAsset.storeUrl,
+          imageUrl: resolvePathToUrl(baseAsset.imageUrl),
+          category: baseAsset.category,
+        } : null,
         steps: rSteps,
         assets: rAssets,
       }, 200);

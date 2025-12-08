@@ -8,6 +8,7 @@ import { and, asc, eq } from 'drizzle-orm';
 import { RecipeRes } from '.';
 import { recipeAssets, recipes, recipeSteps } from '@/db/schema/recipes';
 import { assets } from '@/db/schema/assets';
+import { resolvePathToUrl } from '@/lib/s3';
 
 
 
@@ -46,6 +47,7 @@ const get = new Hono<AppEnv>()
 
       return c.json<RecipeRes>({
         ...result[0],
+        imageUrl: resolvePathToUrl(result[0].imageUrl),
         baseAsset: baseAsset,
         steps: rSteps,
         assets: rAssets,

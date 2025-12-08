@@ -53,7 +53,15 @@ export default function AssetDetailPage() {
       <PageHeader
         title={t("dashboard.assets.detail.page_title")} 
         description={t("dashboard.assets.detail.page_description")}
-      />
+      >
+        {/* Edit Button */}
+        <Link to="edit">
+          <Button variant="outline">
+            <Pencil className="h-4 w-4 mr-2" />
+            {t('core.action.edit')}
+          </Button>
+        </Link>
+      </PageHeader>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* 左カラム: 画像表示 */}

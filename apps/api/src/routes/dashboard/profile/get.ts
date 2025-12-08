@@ -7,6 +7,7 @@ import { db } from '@/db';
 import { and, eq } from 'drizzle-orm';
 import { profiles } from '@/db/schema/profiles';
 import { ProfileRes } from '.';
+import { resolvePathToUrl } from '@/lib/s3';
 
 const get = new Hono<AppEnv>()
   .get(
@@ -22,7 +23,10 @@ const get = new Hono<AppEnv>()
         return c.json({ error: 'not found' }, 404);
       }
 
-      return c.json<ProfileRes>(profile[0], 200);
+      return c.json<ProfileRes>({
+        ...profile[0],
+        avatarUrl: resolvePathToUrl(profile[0].avatarUrl),
+      }, 200);
     } catch (e) {
       console.error(e);
       return c.json({ error: 'Failed to fetch' }, 500);

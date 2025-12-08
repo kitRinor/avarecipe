@@ -45,7 +45,7 @@ export const recipeAssets = pgTable('recipe_assets', {
   recipeId: uuid('recipe_id').references(() => recipes.id, { onDelete: 'cascade' }).notNull(),
   assetId: uuid('asset_id').notNull().references(() => assets.id, { onDelete: 'cascade' }),
   note: text('note'), // 材料に関するメモ
-  configuration: jsonb('configuration'), // 材料アセットの設定情報（例：色、サイズ、位置など）
+  configuration: jsonb('configuration').$type<Record<string, any>>().default({}), // 材料アセットの設定情報（例：色、サイズ、位置など）
 },(t) => [
   index('recipe_assets_asset_idx').on(t.assetId), // for reverse lookup (asstet -> recipes)
 ]);

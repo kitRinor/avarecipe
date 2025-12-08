@@ -39,7 +39,7 @@ export interface RecipeRes {
     id: string;
     assetId: string;
     note: string | null;
-    configuration: any;
+    configuration: Record<string, any> | null;
     asset: {
       name: string;
       storeUrl: string | null;

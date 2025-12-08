@@ -13,7 +13,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { 
   Pencil, ArrowLeft, Image as ImageIcon, 
   User as UserIcon, Settings2, Copy,
-  ExternalLink
+  ExternalLink,
+  Box
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -73,26 +74,16 @@ export default function RecipeDetailPage() {
     <PageLayout>
       {/* Header */}
       <PageHeader
-        title={recipe.name}
-        description={recipe.description || ""}
+        title={t('dashboard.recipes.detail.page_title')}
+        description={t('dashboard.recipes.detail.page_description')}
       >
-        <div className="flex items-center gap-2">
-          {/* Back Button */}
-          <Link to="/dashboard/recipes">
-            <Button variant="ghost" size="sm">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              {t('core.action.back')}
-            </Button>
-          </Link>
-          
           {/* Edit Button */}
           <Link to="edit">
-            <Button variant="outline" size="sm">
+            <Button variant="outline">
               <Pencil className="h-4 w-4 mr-2" />
               {t('core.action.edit')}
             </Button>
           </Link>
-        </div>
       </PageHeader>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -119,10 +110,10 @@ export default function RecipeDetailPage() {
 
 
           
-          {/* Ingredients List */}
+          {/* Assets List */}
           <section>
-            <h2 className="text-xl font-bold mb-2 flex items-center gap-2">
-              {t('dashboard.recipes.edit.ingredients')}
+            <h2 className="text-vrclo1 text-xm font-bold mb-2 flex items-center gap-2">
+              {t('dashboard.recipes.detail.assets')}
             </h2>
 
             <div className="space-y-4"> 
@@ -137,11 +128,10 @@ export default function RecipeDetailPage() {
                   </CardHeader>
                   <CardContent>
                     <div className="flex gap-3">
-                      {recipe?.baseAsset?.imageUrl && (
-                        <div className="h-14 w-14 rounded-md overflow-hidden border border-border bg-muted flex-shrink-0">
-                          <img src={recipe?.baseAsset?.imageUrl} className="w-full h-full object-cover" />
-                        </div>
-                      )}
+                      <Avatar className="h-12 w-12 border border-border">
+                          <AvatarImage src={recipe.baseAsset.imageUrl || undefined} className="object-cover" />
+                          <AvatarFallback><Box className="h-4 w-4" /></AvatarFallback>
+                      </Avatar>
                       <div className="min-w-0 flex-1">
                         <p className="font-bold truncate">{recipe?.baseAsset?.name}</p>
                         <a 
@@ -150,7 +140,7 @@ export default function RecipeDetailPage() {
                           rel="noreferrer"
                           className="text-xs text-primary hover:underline flex items-center gap-1 mt-1"
                         >
-                          BOOTH <ExternalLink className="h-3 w-3" />
+                          {t('core.data.recipe.store_url')} <ExternalLink className="h-3 w-3" />
                         </a>
                       </div>
                     </div>
@@ -163,13 +153,15 @@ export default function RecipeDetailPage() {
                   <div className="flex flex-col">
                     {/* Asset Info */}
                     <div className="p-3 flex items-center gap-3 bg-muted/30 border-b border-border">
+                      {asset.asset?.imageUrl && (
                         <div className="h-10 w-10 rounded bg-muted overflow-hidden flex-shrink-0 border border-border">
                           <img src={asset.asset?.imageUrl || undefined} className="w-full h-full object-cover" />
                         </div>
-                        <div className="min-w-0">
-                          <p className="font-medium truncate text-sm">{asset.asset?.name}</p>
-                          <p className="text-xs text-muted-foreground capitalize">{asset.asset?.category}</p>
-                        </div>
+                      )}
+                      <div className="min-w-0">
+                        <p className="font-medium truncate text-sm">{asset.asset?.name}</p>
+                        <p className="text-xs text-muted-foreground capitalize">{asset.asset?.category}</p>
+                      </div>
                     </div>
 
                     {/* Config & Note */}
@@ -207,16 +199,22 @@ export default function RecipeDetailPage() {
 
         {/* --- Right Column: Steps & Ingredients --- */}
         <div className="lg:col-span-2 space-y-8">
-          
+          <h3 className="text-2xl font-bold mb-4 flex items-center gap-2">
+            {recipe.name}
+          </h3>
+          <p className="text-muted-foreground whitespace-pre-wrap">
+            {recipe.description || t('dashboard.recipes.detail.no_description')}
+          </p>
+
           {/* Steps Timeline */}
           <section>
-            <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-              {t('dashboard.recipes.edit.steps')}
+            <h2 className="text-vrclo1 text-xm font-bold mb-4 flex items-center gap-2">
+              {t('dashboard.recipes.detail.steps')}
             </h2>
             
             <div className="space-y-6 relative before:absolute before:left-[15px] before:top-2 before:h-full before:w-[2px] before:bg-border before:content-['']">
               {recipe.steps.length === 0 && (
-                <p className="pl-10 text-muted-foreground text-sm">手順は登録されていません。</p>
+                <p className="pl-10 text-muted-foreground text-sm">{t('dashboard.recipes.detail.no_steps')}</p>
               )}
               
               {recipe.steps.sort((a,b) => a.stepNumber - b.stepNumber).map((step) => (

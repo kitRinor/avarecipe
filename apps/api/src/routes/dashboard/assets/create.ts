@@ -8,6 +8,7 @@ import { assetCategoryEnum, assets } from '@/db/schema/assets';
 import { AssetRes } from '.';
 import { genSrcKeyFromUrl } from '@/lib/sourceKeyUtil';
 import { and, eq } from 'drizzle-orm';
+import { dissolveUrltoPath, resolvePathToUrl } from '@/lib/s3';
 
 const jsonValidator = zValidator('json', z.object({
   name: z.string().min(1, "Name is required"),
@@ -45,11 +46,14 @@ const create = new Hono<AppEnv>()
           storeUrl: body.storeUrl,
           description: body.description,
           category: body.category,
-          imageUrl: body.imageUrl,
+          imageUrl: dissolveUrltoPath(body.imageUrl),
           sourceKey: sourceKey,
         }).returning();
 
-        return c.json<AssetRes>(result[0], 200);
+        return c.json<AssetRes>({
+          ...result[0],
+          imageUrl: resolvePathToUrl(result[0].imageUrl),
+        }, 200);
       } catch (e) {
         console.error(e);
         return c.json({ error: 'Failed to create' }, 500);

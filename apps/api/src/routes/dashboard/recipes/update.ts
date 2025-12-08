@@ -8,6 +8,7 @@ import { db } from '@/db';
 import { RecipeRes } from '.';
 import { NewRecipeAsset, NewRecipeStep, recipeAssets, recipes, recipeStateEnum, recipeSteps } from '@/db/schema/recipes';
 import { id } from 'zod/locales';
+import { dissolveUrltoPath, resolvePathToUrl } from '@/lib/s3';
 
 const paramValidator = zValidator('param', z.object({
   id: z.uuid(),
@@ -48,7 +49,8 @@ const update = new Hono<AppEnv>()
 
         const result = await db.update(recipes)
           .set({
-            ...body
+            ...body,
+            imageUrl: dissolveUrltoPath(body.imageUrl),
           })
           .where(and(
             eq(recipes.id, id),
@@ -74,10 +76,18 @@ const update = new Hono<AppEnv>()
           const existingMap = new Map(existing.map((s) => [s.id, s]));
           for (const step of body.steps) {
             if ('id' in step && step.id && existingMap.has(step.id)) {
-              mods.update.push({ ...step, recipeId: recipeId });
+              mods.update.push({
+                ...step, 
+                imageUrl: dissolveUrltoPath(step.imageUrl),
+                recipeId: recipeId
+              });
               existingMap.delete(step.id);
             } else {
-              mods.create.push({ ...step, recipeId: recipeId });
+              mods.create.push({ 
+                ...step, 
+                imageUrl: dissolveUrltoPath(step.imageUrl),
+                recipeId: recipeId 
+              });
             }
           }
           mods.delete = Array.from(existingMap.keys());
@@ -130,9 +140,10 @@ const update = new Hono<AppEnv>()
         }
         return c.json<RecipeRes>({
           ...result[0], 
+          imageUrl: resolvePathToUrl(result[0].imageUrl),
           baseAsset: null,
           steps: rSteps, 
-          assets: rAssets
+          assets: rAssets,
         }, 200);
       } catch (e) {
         console.error(e);

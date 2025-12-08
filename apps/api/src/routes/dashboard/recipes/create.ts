@@ -6,6 +6,7 @@ import { Hono } from 'hono';
 import { AppEnv } from '@/type';
 import { RecipeRes } from '.';
 import { recipeAssets, recipes, recipeStateEnum, recipeSteps } from '@/db/schema/recipes';
+import { dissolveUrltoPath, resolvePathToUrl } from '@/lib/s3';
 
 const jsonValidator = zValidator('json', z.object({
   userId: z.uuid("User ID must be a valid UUID"),
@@ -41,7 +42,7 @@ const create = new Hono<AppEnv>()
         userId: userId, // ensure the userId is set from the authenticated user
         name: body.name,
         description: body.description,
-        imageUrl: body.imageUrl,
+        imageUrl: dissolveUrltoPath(body.imageUrl),
         baseAssetId: body.baseAssetId,
       }).returning();
       
@@ -63,13 +64,14 @@ const create = new Hono<AppEnv>()
             stepNumber: step.stepNumber,
             name: step.name,
             description: step.description,
-            imageUrl: step.imageUrl,
+            imageUrl: dissolveUrltoPath(step.imageUrl),
           }))
         ).returning() : [];
 
 
       return c.json<RecipeRes>({
         ...result[0],
+        imageUrl: resolvePathToUrl(result[0].imageUrl),
         baseAsset: null,
         steps: steps,
         assets: assets.map(a => ({...a, asset: null})),

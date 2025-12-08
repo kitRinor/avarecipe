@@ -10,9 +10,10 @@ interface ImageUploaderProps {
   onUploadSuccess: (url: string) => void;
   defaultUrl?: string;
   category: 'avatar' | 'item' | 'outfit' | 'other';
+  preview?: boolean;
 }
 
-export function ImageUploader({ onUploadSuccess, defaultUrl, category }: ImageUploaderProps) {
+export function ImageUploader({ onUploadSuccess, defaultUrl, category, preview = true }: ImageUploaderProps) {
   const { uploadImage, isUploading } = useS3Upload();
   const [previewUrl, setPreviewUrl] = useState<string | undefined>(defaultUrl);
   const [isDragOver, setIsDragOver] = useState(false); 
@@ -94,8 +95,6 @@ export function ImageUploader({ onUploadSuccess, defaultUrl, category }: ImageUp
   
   return (
     <div className="space-y-2">
-      <Label htmlFor={`file-upload-${category}`}>画像アップロード ({category})</Label>
-      
       <Input 
         ref={fileInputRef}
         id={`file-upload-${category}`}
@@ -113,8 +112,8 @@ export function ImageUploader({ onUploadSuccess, defaultUrl, category }: ImageUp
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
         className={cn(
-          "w-full h-32 rounded-lg border-2 border-dashed transition-colors cursor-pointer",
-          "flex items-center justify-center p-2",
+          "aspect-video min-h-32 rounded-lg border-2 border-dashed transition-colors cursor-pointer",
+          "flex items-center justify-center p-0",
           isDragOver 
             ? "border-blue-500 bg-blue-50 "
             : "border-vrclo1-300  hover:border-vrclo1-400 ",
@@ -122,29 +121,31 @@ export function ImageUploader({ onUploadSuccess, defaultUrl, category }: ImageUp
         )}
       >
         {/* Preview area */}
-        <div className="flex items-center gap-4 w-full">
-            <div 
-                className={cn(
-                    "w-20 h-20 rounded-lg bg-vrclo1-200  flex items-center justify-center relative overflow-hidden flex-shrink-0",
-                )}
-            >
-                {previewUrl ? (
-                    <>
-                    <img src={previewUrl} alt="Preview" className="object-cover w-full h-full" />
-                    <Button 
-                        variant="destructive" 
-                        size="icon" 
-                        className="absolute top-1 right-1 h-5 w-5 opacity-80"
-                        onClick={(e) => { e.stopPropagation(); handleClear(); }} // 伝播を止めて親のonClickが発火しないようにする
-                        disabled={isUploading}
-                    >
-                        <X className="h-3 w-3" />
-                    </Button>
-                    </>
-                ) : (
-                    <Upload className="h-6 w-6 text-vrclo1-400" />
-                )}
-            </div>
+          <div className="flex items-center p-4 gap-4 w-full">
+            {preview && (
+              <div 
+                  className={cn(
+                      "w-20 h-20 rounded-lg bg-vrclo1-200  flex items-center justify-center relative overflow-hidden flex-shrink-0",
+                  )}
+              >
+                  {previewUrl ? (
+                      <>
+                        <img src={previewUrl} alt="Preview" className="object-cover w-full h-full" />
+                        <Button 
+                          variant="destructive" 
+                          size="icon" 
+                          className="absolute top-1 right-1 h-5 w-5 opacity-80"
+                          onClick={(e) => { e.stopPropagation(); handleClear(); }} // 伝播を止めて親のonClickが発火しないようにする
+                          disabled={isUploading}
+                        >
+                          <X className="h-3 w-3" />
+                        </Button>
+                      </>
+                  ) : (
+                      <Upload className="h-6 w-6 text-vrclo1-400" />
+                  )}
+              </div>
+            )}
 
             {/* Text area */}
             <div className="text-center flex-1">

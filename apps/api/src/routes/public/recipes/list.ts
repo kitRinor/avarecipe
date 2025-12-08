@@ -10,6 +10,7 @@ import { recipeAssets, recipes, recipeSteps } from '@/db/schema/recipes';
 import { and, asc, eq, inArray } from 'drizzle-orm';
 import { profiles } from '@/db/schema/profiles';
 import { assets } from '@/db/schema/assets';
+import { resolvePathToUrl } from '@/lib/s3';
 
 const list = new Hono<AppEnv>()
   .get(
@@ -28,8 +29,8 @@ const list = new Hono<AppEnv>()
             generateCondition(recipes, filter, userId),
             eq(recipes.state, 'public')
           ))
-          .innerJoin(profiles, eq(recipes.userId, profiles.userId))
-          .leftJoin(assets, eq(recipes.baseAssetId, assets.id))
+          .innerJoin(profiles, eq(recipes.userId, profiles.userId)) // notnull
+          .leftJoin(assets, eq(recipes.baseAssetId, assets.id)) // nullable
           .orderBy(generateSorting(recipes, order, sort))
           .limit(limit)
           .offset(offset);
@@ -42,9 +43,14 @@ const list = new Hono<AppEnv>()
             id: p.userId,
             handle: p.handle,
             displayName: p.displayName,
-            avatarUrl: p.avatarUrl,
+            avatarUrl: resolvePathToUrl(p.avatarUrl),
           },
-          baseAsset: ba,
+          baseAsset: ba ? {
+            name: ba.name,
+            storeUrl: ba.storeUrl,
+            imageUrl: resolvePathToUrl(ba.imageUrl),
+            category: ba.category,
+          } : null,
           steps: [],
           assets: [],
         })), 200);

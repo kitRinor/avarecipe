@@ -8,6 +8,7 @@ import { AuthUser, cookieOptions } from '.';
 import z from 'zod';
 import { Hono } from 'hono';
 import { AppEnv } from '@/type';
+import { resolvePathToUrl } from '@/lib/s3';
 
 
 const login = new Hono<AppEnv>()
@@ -47,7 +48,7 @@ const login = new Hono<AppEnv>()
       id: user.id,
       displayName: user.profile.displayName,
       handle: user.profile.handle,
-      avatarUrl: user.profile.avatarUrl,
+      avatarUrl: resolvePathToUrl(user.profile.avatarUrl),
     };
 
     return c.json(authUser, 200);

@@ -8,6 +8,7 @@ import { db } from '@/db';
 import { profiles } from '@/db/schema/profiles';
 import { ProfileRes } from '.';
 import { MAX_USER_DISPLAY_NAME_LENGTH, MIN_USER_DISPLAY_NAME_LENGTH, USER_HANDLE_REGEX } from '@/const';
+import { dissolveUrltoPath, resolvePathToUrl } from '@/lib/s3';
 
 
 const jsonValidator = zValidator('json', z.object({
@@ -30,6 +31,7 @@ const update = new Hono<AppEnv>()
         const result = await db.update(profiles)
           .set({
             ...body,
+            avatarUrl: body.avatarUrl ? dissolveUrltoPath(body.avatarUrl) : undefined,
           })
           .where(and(
             eq(profiles.userId, userId),
@@ -40,7 +42,10 @@ const update = new Hono<AppEnv>()
           return c.json({ error: 'not found' }, 404);
         }
 
-        return c.json<ProfileRes>(result[0], 200);
+        return c.json<ProfileRes>({
+          ...result[0],
+          avatarUrl: resolvePathToUrl(result[0].avatarUrl),
+        }, 200);
       } catch (e) {
         console.error(e);
         return c.json({ error: 'Failed to update' }, 500);

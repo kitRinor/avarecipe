@@ -201,6 +201,7 @@ export default function EditRecipePage() {
     setSaving(true);
 
     try {
+      console.log('recipe to save:', recipe);
       const res = await dashboardApi.recipes[':id'].$put({
         param: { id },
         json: {
@@ -337,7 +338,6 @@ export default function EditRecipePage() {
     setRecipe({ ...recipe, assets: newAssets });
   };
 
-  // 👇 Updated to use ConfigEditor
   const updateAssetConfigObj = (index: number, newConfig: Record<string, any>) => {
     if (!recipe) return;
     const newAssets = [...recipe.assets];
@@ -372,10 +372,23 @@ export default function EditRecipePage() {
           
           {/* Basic Info & Thumbnail */}
           <Card>
-            <CardHeader className="pb-3 border-b border-border/50">
+            <CardHeader className="flex flex-row items-center justify-between py-2 border-b border-border/50">
               <CardTitle className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
                 {t('dashboard.recipes.edit.basic_info')}
               </CardTitle>
+              <Select 
+                value={recipe.state} 
+                onValueChange={(val: any) => updateField('state', val)}
+              >
+                <SelectTrigger className="h-7 w-[100px] text-xs bg-white/90 dark:bg-black/80 backdrop-blur border-0 shadow-sm">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="private">{t('dashboard.recipes.edit.status.private')}</SelectItem>
+                  <SelectItem value="unlisted">{t('dashboard.recipes.edit.status.unlisted')}</SelectItem>
+                  <SelectItem value="public">{t('dashboard.recipes.edit.status.public')}</SelectItem>
+                </SelectContent>
+              </Select>
             </CardHeader>
             <CardContent className="pt-4 space-y-4">
               <div className="aspect-video bg-muted rounded-md overflow-hidden border border-border relative group">
@@ -386,47 +399,29 @@ export default function EditRecipePage() {
                       <ImageIcon className="h-8 w-8 opacity-50" />
                     </div>
                   )}
-                  {/* State Overlay */}
-                  <div className="absolute top-2 right-2">
-                    <Select 
-                      value={recipe.state} 
-                      onValueChange={(val: any) => updateField('state', val)}
-                    >
-                      <SelectTrigger className="h-7 w-[100px] text-xs bg-white/90 dark:bg-black/80 backdrop-blur border-0 shadow-sm">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="private">{t('dashboard.recipes.edit.status.private')}</SelectItem>
-                        <SelectItem value="unlisted">{t('dashboard.recipes.edit.status.unlisted')}</SelectItem>
-                        <SelectItem value="public">{t('dashboard.recipes.edit.status.public')}</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
                   {/* Upload Overlay */}
-                  <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                      <div className="w-3/4">
-                        <ImageUploader 
-                          category="other" 
-                          defaultUrl={recipe.imageUrl || undefined}
-                          onUploadSuccess={(url) => updateField('imageUrl', url)}
-                        />
-                      </div>
+                  <div className="absolute inset-0 bg-white/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <ImageUploader 
+                      category="other" 
+                      defaultUrl={recipe.imageUrl || undefined}
+                      preview={false}
+                      onUploadSuccess={(url) => updateField('imageUrl', url)}
+                    />
                   </div>
               </div>
 
               <div className="space-y-2">
-                <Label>{t('dashboard.recipes.create.recipe_name')}</Label>
                 <Input 
                   value={recipe.name} 
                   onChange={e => updateField('name', e.target.value)} 
                   className="font-bold text-lg border-transparent hover:border-border focus:border-primary px-2 -ml-2"
-                  placeholder="レシピ名"
+                  placeholder={t('dashboard.recipes.edit.basic_info_name')}
                 />
                 <Textarea 
                   value={recipe.description || ""} 
                   onChange={e => updateField('description', e.target.value)} 
                   className="min-h-[100px] resize-y border-transparent hover:border-border focus:border-primary bg-muted/20 px-2 -ml-2"
-                  placeholder="説明・メモ..."
+                  placeholder={t('dashboard.recipes.edit.basic_info_description')}
                 />
               </div>
             </CardContent>
@@ -442,7 +437,7 @@ export default function EditRecipePage() {
              <CardContent className="pt-4">
                {recipe.baseAsset ? (
                  <div className="flex items-center gap-3">
-                   <Avatar className="h-10 w-10 border border-border">
+                   <Avatar className="h-12 w-12 border border-border">
                       <AvatarImage src={recipe.baseAsset.imageUrl || undefined} className="object-cover" />
                       <AvatarFallback><Box className="h-4 w-4" /></AvatarFallback>
                    </Avatar>
@@ -473,9 +468,11 @@ export default function EditRecipePage() {
                {recipe.assets.map((asset, index) => (
                  <div key={index} className="group relative pl-3 border-l-2 border-border hover:border-primary/50 transition-colors pb-2">
                     <div className="flex gap-3 mb-2 items-center">
-                      <div className="h-8 w-8 rounded bg-muted overflow-hidden flex-shrink-0 border border-border">
-                         <img src={asset.asset?.imageUrl || undefined} className="w-full h-full object-cover" />
-                      </div>
+                      {asset.asset?.imageUrl && (
+                        <div className="h-8 w-8 rounded bg-muted overflow-hidden flex-shrink-0 border border-border">
+                          <img src={asset.asset?.imageUrl || undefined} className="w-full h-full object-cover" />
+                        </div>
+                      )}
                       <div className="flex-1 min-w-0">
                          <p className="text-sm font-medium truncate">{asset.asset?.name}</p>
                          <p className="text-[10px] text-muted-foreground capitalize">{asset.asset?.category}</p>
@@ -519,7 +516,7 @@ export default function EditRecipePage() {
         <div className="lg:col-span-2 space-y-8 order-1 lg:order-2">
           
           <div className="flex items-center justify-between">
-            <h2 className="text-xl font-bold flex items-center gap-2">
+            <h2 className="text-vrclo1 text-xl font-bold flex items-center gap-2">
               <span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs font-bold">!</span>
               {t('dashboard.recipes.edit.steps')}
             </h2>

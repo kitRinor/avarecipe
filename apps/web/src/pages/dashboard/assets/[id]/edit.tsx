@@ -211,7 +211,21 @@ export default function EditAsset() {
       <PageHeader
         title={t("dashboard.assets.edit.page_title")}
         description={t("dashboard.assets.edit.page_description")}
-      />
+      >
+              <div className="flex items-center justify-between gap-10">
+                <Button variant="destructive" type="button" onClick={handleDelete} className="bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 border border-red-200">
+                  <Trash2 className="h-4 w-4 mr-2" /> {t('core.action.delete')}
+                </Button>
+                <div className="flex gap-2">
+                  <Button variant="ghost" onClick={() => navigate(-1)}>
+                    {t('core.action.cancel')}
+                  </Button>
+                  <Button onClick={handleUpdate} disabled={isSaving || isScraping || isUploading}>
+                    <Save className="h-4 w-4 mr-2" /> {isSaving ? t('core.action.loading') : t('core.action.save')}
+                  </Button>
+                </div>
+              </div>
+      </PageHeader>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* 左カラム: 画像プレビュー */}
@@ -304,19 +318,6 @@ export default function EditAsset() {
                 showFetchButton={!!(storeUrl && !fetchedStoreInfo)}
               />
 
-              <div className="pt-6 flex items-center justify-between border-t mt-4">
-                <Button variant="destructive" type="button" onClick={handleDelete} className="bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 border border-red-200">
-                  <Trash2 className="h-4 w-4 mr-2" /> {t('core.action.delete')}
-                </Button>
-                <div className="flex gap-2">
-                  <Button variant="ghost" onClick={() => navigate(-1)}>
-                    {t('core.action.cancel')}
-                  </Button>
-                  <Button onClick={handleUpdate} disabled={isSaving || isScraping || isUploading}>
-                    <Save className="h-4 w-4 mr-2" /> {isSaving ? t('core.action.loading') : t('core.action.save')}
-                  </Button>
-                </div>
-              </div>
             </CardContent>
           </Card>
         </div>

@@ -8,6 +8,7 @@ import { db } from '@/db';
 import { assetCategoryEnum, assets } from '@/db/schema/assets';
 import { AssetRes } from '.';
 import { genSrcKeyFromUrl } from '@/lib/sourceKeyUtil';
+import { dissolveUrltoPath, resolvePathToUrl } from '@/lib/s3';
 
 
 const paramValidator = zValidator('param', z.object({
@@ -53,7 +54,7 @@ const update = new Hono<AppEnv>()
             storeUrl: body.storeUrl,
             description: body.description,
             category: body.category,
-            imageUrl: body.imageUrl,
+            imageUrl: dissolveUrltoPath(body.imageUrl),
             sourceKey: sourceKey,
           })
           .where(and(
@@ -66,7 +67,10 @@ const update = new Hono<AppEnv>()
           return c.json({ error: 'not found' }, 404);
         }
 
-        return c.json<AssetRes>(result[0], 200);
+        return c.json<AssetRes>({
+          ...result[0],
+          imageUrl: resolvePathToUrl(result[0].imageUrl),
+        }, 200);
       } catch (e) {
         console.error(e);
         return c.json({ error: 'Failed to update' }, 500);
